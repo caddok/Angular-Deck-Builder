@@ -1,1 +1,32 @@
-<p>header works!</p>
+<mat-toolbar class="toolbar">
+  <a class="logo"></a>
+  <mat-nav-list fxLayout="row">
+    <mat-list-item>
+      <a class="menu-item">News</a>
+    </mat-list-item>
+    <mat-list-item>
+      <a class="menu-item menu-item-border">Deck Builder</a>
+    </mat-list-item>
+    <mat-list-item>
+      <a class="menu-item">Draw Chance Calculator</a>
+    </mat-list-item>
+    <mat-list-item *ngIf="isAuthenticated">
+      <a class="menu-item">My Decks</a>
+    </mat-list-item>
+  </mat-nav-list>
+  <div fxFlex fxLayoutAlign="end center">
+    <mat-nav-list fxLayout="row">
+      <mat-list-item *ngIf="isAuthenticated; else loggedOut">
+        <a class="menu-item">Log out</a>
+      </mat-list-item>
+      <ng-template #loggedOut>
+        <mat-list-item>
+          <a class="menu-item">Log in</a>
+        </mat-list-item>
+        <mat-list-item>
+          <a class="menu-item">Sign up</a>
+        </mat-list-item>
+      </ng-template>
+    </mat-nav-list>
+  </div>
+</mat-toolbar>

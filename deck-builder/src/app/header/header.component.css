@@ -1,0 +1,28 @@
+.fill-remaining-space{
+  flex: 1 1 auto;
+}
+
+.toolbar {
+  background: #554131;
+}
+
+.menu-item {
+  box-sizing: border-box;
+  color: #FCD144;
+  font-size: 20px;
+  cursor: pointer;
+  text-align: center;
+}
+
+.logo {
+  height: 116px;
+  width: 235px;
+  background: url(../../images/HearthStone_logo.png);
+  margin-left: 0px;
+  margin-right: 10px;
+  cursor: pointer;
+}
+
+.authentication {
+  margin-right: auto;
+}
