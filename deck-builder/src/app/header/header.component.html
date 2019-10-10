@@ -1,17 +1,17 @@
 <mat-toolbar class="toolbar">
-  <a class="logo"></a>
+  <a class="logo" routerLink="/"></a>
   <mat-nav-list fxLayout="row">
-    <mat-list-item>
-      <a class="menu-item">News</a>
+    <mat-list-item >
+      <a class="menu-item" routerLink="/news" routerLinkActive="active">News</a>
     </mat-list-item>
     <mat-list-item>
-      <a class="menu-item menu-item-border">Deck Builder</a>
+      <a class="menu-item" routerLink="/deckbuilder" routerLinkActive="active">Deck Builder</a>
     </mat-list-item>
     <mat-list-item>
-      <a class="menu-item">Draw Chance Calculator</a>
+      <a class="menu-item" routerLink="draw" routerLinkActive="active">Draw Chance Calculator</a>
     </mat-list-item>
     <mat-list-item *ngIf="isAuthenticated">
-      <a class="menu-item">My Decks</a>
+      <a class="menu-item" routerLink="/mydecks" routerLinkActive="active">My Decks</a>
     </mat-list-item>
   </mat-nav-list>
   <div fxFlex fxLayoutAlign="end center">
@@ -21,10 +21,10 @@
       </mat-list-item>
       <ng-template #loggedOut>
         <mat-list-item>
-          <a class="menu-item">Log in</a>
+          <a class="menu-item" routerLink="/auth/login">Log in</a>
         </mat-list-item>
         <mat-list-item>
-          <a class="menu-item">Sign up</a>
+          <a class="menu-item" routerLink="/auth/signup">Sign up</a>
         </mat-list-item>
       </ng-template>
     </mat-nav-list>

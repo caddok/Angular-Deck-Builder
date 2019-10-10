@@ -9,7 +9,6 @@ export class HeaderComponent implements OnInit {
 
   isAuthenticated = false;
 
-
   constructor() { }
 
   ngOnInit() {
