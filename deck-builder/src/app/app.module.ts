@@ -16,6 +16,7 @@ import { MyDecksEditComponent } from './my-decks/my-decks-edit/my-decks-edit.com
 import { AuthComponent } from './auth/auth.component';
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -36,7 +37,9 @@ import { SignupComponent } from './auth/signup/signup.component';
   imports: [
     BrowserModule,
     MaterialComponentsModule,
-    AppRoutingModule
+    AppRoutingModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
