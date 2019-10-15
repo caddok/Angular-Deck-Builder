@@ -1,6 +1,6 @@
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatCheckboxModule } from '@angular/material';
+import { MatCheckboxModule, MatNativeDateModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material';
 import { MatInputModule } from '@angular/material/input';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
@@ -68,7 +68,8 @@ import { NgModule } from '@angular/core';
     MatTableModule,
     MatSortModule,
     MatPaginatorModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatNativeDateModule
   ]
 })
 export class MaterialComponentsModule { }
