@@ -1,12 +1,17 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormBuilder } from '@angular/forms';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import * as fromApp from '../../store/app.reducer';
+import * as SignupActions from '../store/auth.actions';
+import { Registration } from 'src/app/shared/models/registration.model';
 
 @Component({
   selector: 'app-signup',
   templateUrl: './signup.component.html',
   styleUrls: ['./signup.component.css']
 })
-export class SignupComponent implements OnInit {
+export class SignupComponent implements OnInit, OnDestroy {
 
   isLoading = false;
   singupForm: FormGroup;
@@ -22,8 +27,9 @@ export class SignupComponent implements OnInit {
     'Use at least one number and one alphabetic character'
   ];
   passwordRegex = '^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$';
+  private storeSub: Subscription;
 
-  constructor() { }
+  constructor(private store: Store<fromApp.AppState>) { }
 
   ngOnInit() {
     this.singupForm = new FormGroup({
@@ -40,9 +46,28 @@ export class SignupComponent implements OnInit {
         secretAnswer: new FormControl(null, [Validators.required])
       })
     });
+    this.storeSub = this.store.select('auth').subscribe(
+      signupState => {
+        this.isLoading = signupState.loading;
+      }
+    );
   }
 
   onRegister() {
-    console.log(this.singupForm);
+    const reg = new Registration(
+      this.singupForm.get('personalData.date').value,
+      this.singupForm.get('accountData.email').value,
+      this.singupForm.get('accountData.password').value,
+      this.singupForm.get('accountData.secretQuestion').value,
+      this.singupForm.get('accountData.secretAnswer').value,
+      this.singupForm.get('personalData.firstName').value,
+      this.singupForm.get('personalData.lastName').value
+    );
+    console.log(reg);
+    this.store.dispatch(SignupActions.registrationStart({ registration: reg }));
+  }
+
+  ngOnDestroy(): void {
+    this.storeSub.unsubscribe();
   }
 }
