@@ -8,8 +8,8 @@ export class User {
     // tslint:disable-next-line: variable-name
     public _token: string,
     public tokenExpirationDate: Date,
-    private secretQuestion: string,
-    private secretAnswer: string,
+    private secretQuestion?: string,
+    private secretAnswer?: string,
   ) { }
 
   get token(): string {

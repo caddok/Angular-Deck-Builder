@@ -4,10 +4,10 @@ import { Injectable } from '@angular/core';
 import { of } from 'rxjs';
 import { AuthService } from '../auth.service';
 import { HttpErrorResponse } from '@angular/common/http';
-import * as SignupActions from './auth.actions';
 import { User } from 'src/app/shared/models/user.model';
 import { Registration } from 'src/app/shared/models/registration.model';
 import { Router } from '@angular/router';
+import * as AuthActions from './auth.actions';
 
 export interface AuthResponseData {
   kind: string;
@@ -19,19 +19,12 @@ export interface AuthResponseData {
   registered?: boolean;
 }
 
-const handleAuthentication = (expiresIn: number, email: string, userId: string, token: string, registration: Registration) => {
-  const expirationDate = new Date(new Date().getTime() + (expiresIn * 1000));
-  const user = new User(email, userId, token, expirationDate, registration.secretQuestion, registration.secretAnswer);
-  localStorage.setItem('userData', JSON.stringify(user));
-  return SignupActions.registrationSuccess({ user, redirect: true });
-};
-
 const handleError = (errorResponse: HttpErrorResponse) => {
-  let errorMessage = 'An error has ocurred';
+  let errorMessage = 'An error ocurred';
 
   if (!errorResponse.error || !errorResponse.error.error) {
     return of(
-      SignupActions.registrationFail({ message: errorMessage })
+      AuthActions.authFail({ message: errorMessage })
     );
   }
 
@@ -39,10 +32,13 @@ const handleError = (errorResponse: HttpErrorResponse) => {
     case 'EMAIL_EXISTS':
       errorMessage = 'This email is already in use';
       break;
+    case 'EMAIL_NOT_FOUND':
+      errorMessage = 'This email doesn\'t exists';
+      break;
   }
 
   return of(
-    SignupActions.registrationFail({ message: errorMessage })
+    AuthActions.authFail({ message: errorMessage })
   );
 };
 
@@ -51,44 +47,33 @@ export class AuthEffects {
 
   @Effect()
   signup$ = this.actions$.pipe(
-    ofType(SignupActions.registrationStart),
+    ofType(AuthActions.registrationStart),
     switchMap(action => {
       return this.authService.registerUser(action.registration)
         .pipe(
-          tap((authData) => {
-            this.authService.setLogoutTimer(+authData.expiresIn);
-          }),
           map(
             authData => {
-              return handleAuthentication(+authData.expiresIn, authData.email, authData.localId, authData.idToken, action.registration);
+              return this.handleAuthentication(
+                +authData.expiresIn,
+                authData.email,
+                authData.localId,
+                authData.idToken,
+                action.registration);
             }),
           catchError(error => handleError(error))
         );
     })
   );
 
-  @Effect({
-    dispatch: false
-  })
-  signupSuccess$ = this.actions$.pipe(
-    ofType(SignupActions.registrationSuccess),
-    tap(action => {
-      if (action.redirect) {
-        this.router.navigate(['/']);
-      }
-    }),
-    switchMap(action => this.authService.saveUser(action.user))
-  );
-
   @Effect()
   autoLogin$ = this.actions$.pipe(
-    ofType(SignupActions.autoLogin),
+    ofType(AuthActions.autoLogin),
     map(() => {
       const user: User = JSON.parse(localStorage.getItem('userData'));
       if (user.token) {
         const expirationDuration = new Date(user.tokenExpirationDate).getTime() - new Date().getTime();
         this.authService.setLogoutTimer(expirationDuration);
-        return SignupActions.registrationSuccess({ user, redirect: false });
+        return AuthActions.authSuccess({ user, redirect: false });
       }
 
       return { type: 'DUMMY' };
@@ -99,12 +84,51 @@ export class AuthEffects {
     dispatch: false
   })
   logout = this.actions$.pipe(
-    ofType(SignupActions.logout),
+    ofType(AuthActions.logout),
     tap(() => {
       this.authService.clearLogoutTimer();
       localStorage.removeItem('userData');
     })
   );
 
+  @Effect()
+  login$ = this.actions$.pipe(
+    ofType(AuthActions.login),
+    switchMap((authData) =>
+      this.authService.login(authData.email, authData.password)
+        .pipe(
+          map(response => this.handleAuthentication(+response.expiresIn, response.email, response.localId, response.idToken)),
+          catchError(error => handleError(error))
+        )
+    )
+  );
+
+  @Effect({
+    dispatch: false
+  })
+  authRedirect = this.actions$.pipe(
+    ofType(AuthActions.authSuccess),
+    tap((success) => {
+      if (success.redirect) {
+        this.router.navigate(['/']);
+      }
+    })
+  );
+
   constructor(private actions$: Actions, private authService: AuthService, private router: Router) { }
+
+  private handleAuthentication(expiresIn: number, email: string, userId: string, token: string, registration?: Registration) {
+    const expireInMillis = expiresIn * 1000;
+    const expirationDate = new Date(new Date().getTime() + expireInMillis);
+    this.authService.setLogoutTimer(expireInMillis);
+    let user: User;
+    if (registration) {
+      user = new User(email, userId, token, expirationDate, registration.secretQuestion, registration.secretAnswer);
+    } else {
+      user = new User(email, userId, token, expirationDate);
+    }
+
+    localStorage.setItem('userData', JSON.stringify(user));
+    return AuthActions.authSuccess({ user, redirect: true });
+  }
 }

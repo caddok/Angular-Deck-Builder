@@ -24,12 +24,12 @@ export const reducer = createReducer(
     authError: null,
     loading: true
   })),
-  on(AuthActions.registrationFail, (state, action) => ({
+  on(AuthActions.authFail, (state, action) => ({
     ...state,
     authError: action.message,
     loading: false
   })),
-  on(AuthActions.registrationSuccess, (state, action) => ({
+  on(AuthActions.authSuccess, (state, action) => ({
     ...state,
     authError: null,
     loading: false,
@@ -40,5 +40,9 @@ export const reducer = createReducer(
     authError: null,
     loading: false,
     user: null
+  })),
+  on(AuthActions.login, (state) => ({
+    ...state,
+    loading: true,
   }))
 );

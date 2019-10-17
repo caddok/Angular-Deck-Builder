@@ -35,9 +35,20 @@ export class AuthService {
     );
   }
 
+  login(email: string, password: string) {
+    return this.http.post<AuthResponseData>(
+      'https://www.googleapis.com/identitytoolkit/v3/relyingparty/verifyPassword?key=' + environment.firebaseApiKey,
+      {
+        email,
+        password,
+        returnSecureToken: true
+      }
+    );
+  }
+
   setLogoutTimer(timeLeft: number) {
     this.tokenExpirationTimer = setTimeout(() => {
-      this.store.dispatch(AuthActions.logout);
+      this.store.dispatch(AuthActions.logout());
     }, timeLeft);
   }
 

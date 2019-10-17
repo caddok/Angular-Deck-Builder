@@ -4,6 +4,7 @@
 <div *ngIf="isLoading" fxLayoutAlign="center center">
   <mat-progress-spinner mode="indeterminate" class="spinner"></mat-progress-spinner>
 </div>
+
 <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
   <div fxLayout="column" fxLayoutAlign="center center" class="form-container" *ngIf="!isLoading">
     <mat-form-field appearance="outline" style="margin-bottom: 20px;">
