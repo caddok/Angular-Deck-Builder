@@ -1,0 +1,45 @@
+<div class="assembler-header">
+  <div fxLayout="row" class="assembler-banner">
+    <div class="deck-specifics" fxLayout="row" fxLayoutAlign="start center"
+      [ngStyle]="{'background-image': 'url(' + hero.deckBanner + ')'}">
+      <div class="format" fxFlexAlign="start" [ngStyle]="{'background-image': 'url(' + getFormatIcon() + ')'}"></div>
+      <div class="deck-title">
+        <h4 style="color: white;" fxFlexAlign="start">{{ deckTitle | titlecase}}</h4>
+        <h4 style="color: rgb(252, 209, 68);; margin-top: 0;">{{ cardCount + '/' + '30'}}</h4>
+      </div>
+    </div>
+    <div class="mana-curve-trigger" fxLayout="row" fxLayoutAlign="center center">
+      <div fxLayout="row wrap" fxLayoutAlign="center center">
+        <a fxFlexAlign="center" class="toggle" (click)="onOpenManaCurve()"
+          [ngStyle]="{'background-image': 'url(' + changeToggleIcon() + ')'}"></a>
+      </div>
+    </div>
+  </div>
+</div>
+<div fxLayout="row" fxLayoutAlign="start end" class="mana-curve-menu" *ngIf="isMenuOpen">
+  <div class="mana-columns-container" fxLayout="row" fxLayoutAlign="start end">
+    <div fxLayout="row" fxFlexAlign="end" class="mana-column first"
+      [ngStyle]="{'height': calculateHeight(zerCost.cardCount)}">
+      <span fxFlexAlign="end" class="card-count">{{zerCost.cardCount}}</span>
+    </div>
+    <div fxLayout="row" fxFlexAlign="end" class="mana-column" *ngFor="let mana of manaCurve; let i=index"
+      [ngStyle]="{'height': calculateHeight(mana.cardCount)}">
+      <span fxFlexAlign="end" class="card-count">{{ mana.cardCount }}</span>
+    </div>
+  </div>
+</div>
+<div class="cards-container">
+  <div fxLayout="column" fxLayoutAlign="start start">
+    <div fxLayout="row" class="card-crop-item" *ngFor="let crop of testCrops">
+      <div fxFlexAlign="start" class="mana-cost" fxLayout="row" fxLayoutAlign="center center">
+        <span>5</span>
+      </div>
+      <div class="card-crop" [ngStyle]="{'background-image': 'url(' + crop + ')'}" fxLayout="row" fxLayoutAlign="start center">
+        <span style="margin-left: 10px;">Druid of the claw</span>
+      </div>
+      <div fxFlexAlign="end" class="cards-container-card-count" fxLayoutAlign="center center">
+        <h3>1</h3>
+      </div>
+    </div>
+  </div>
+</div>

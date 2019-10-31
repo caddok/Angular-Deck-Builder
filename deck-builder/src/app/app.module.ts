@@ -16,6 +16,7 @@ import { MyDecksEditComponent } from './my-decks/my-decks-edit/my-decks-edit.com
 import { AuthComponent } from './auth/auth.component';
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
+import { DeckAssemblerComponent } from './deck-builder/select-hero/build-deck/deck-assembler/deck-assembler.component';
 
 @NgModule({
   declarations: [
@@ -31,7 +32,8 @@ import { SignupComponent } from './auth/signup/signup.component';
     MyDecksEditComponent,
     AuthComponent,
     LoginComponent,
-    SignupComponent
+    SignupComponent,
+    DeckAssemblerComponent
   ],
   imports: [
     BrowserModule,

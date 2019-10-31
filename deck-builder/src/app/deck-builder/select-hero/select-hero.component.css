@@ -1,0 +1,115 @@
+.border-element-horizontal {
+  background-color: #805b36;
+  width: 100%;
+  height: 100px;
+}
+
+.deck-code {
+  width: 100%;
+  max-width: 550px;
+  height: 42px;
+  background-color: #3d0d0d;
+  margin-right: 5px;
+  border-radius: 15px;
+  padding: 5px;
+  border-color: #cca950;
+  border: solid;
+}
+
+#DeckInputCode {
+  color: rgb(252, 209, 68);
+}
+
+::placeholder {
+  color: #947261;
+}
+
+.import {
+  border-radius: 15px;
+  background-color: #766648;
+  color: #452f17;
+  border-color: #86753d;
+  min-height: 42px;
+  min-width: 50px;
+  cursor: pointer;
+}
+
+.heroes-container {
+  background-color: #701a1b;
+  height: calc(100% - 200px);
+}
+
+.formats-container {
+  height: 15vh;
+}
+
+#logo {
+  background-repeat: no-repeat;
+  width: 100%;
+  height: 100%;
+  margin-top: 50px;
+  cursor: pointer;
+}
+
+.format-button {
+  display: inline-block;
+  height: 75px;
+  width: 60px;
+  padding: 0;
+  margin: 0;
+  vertical-align: middle;
+  margin-right: 10px;
+  background: transparent;
+  background-repeat: no-repeat;
+  border: transparent;
+}
+
+.format-title {
+  color: #b23d3f;
+  font-size: 16px;
+  background: #511212;
+  text-shadow: rgb(0, 0, 0) 2px 0px 0px, rgb(0, 0, 0) 1.75517px 0.95885px 0px,
+    rgb(0, 0, 0) 1.0806px 1.68294px 0px, rgb(0, 0, 0) 0.14147px 1.99499px 0px,
+    rgb(0, 0, 0) -0.83229px 1.81859px 0px, rgb(0, 0, 0) -1.60229px 1.19694px 0px,
+    rgb(0, 0, 0) -1.97998px 0.28224px 0px,
+    rgb(0, 0, 0) -1.87291px -0.70157px 0px,
+    rgb(0, 0, 0) -1.30729px -1.5136px 0px,
+    rgb(0, 0, 0) -0.42159px -1.95506px 0px,
+    rgb(0, 0, 0) 0.56732px -1.91785px 0px, rgb(0, 0, 0) 1.41734px -1.41108px 0px,
+    rgb(0, 0, 0) 1.92034px -0.55883px 0px;
+  font-family: "Belwe Bold", Georgia, Times, "Times New Roman", serif;
+}
+
+.format-selected {
+  border: 1px solid rgba(81, 203, 238, 1);
+}
+
+#standard {
+  background-image: url(../../../assets/images/formats/standard_deck_icon.png);
+}
+
+#standard-title {
+  margin-bottom: 20px;
+}
+
+#wild {
+  background: url(../../../assets/images/formats/200px-Wild_icon_large.png);
+  background-repeat: no-repeat;
+}
+
+#wild-title {
+  margin-bottom: 20px;
+}
+
+.hero-portrait {
+  margin-bottom: 15px;
+  margin-top: 30px;
+  width: 100%;
+  height: 200px;
+  cursor: pointer;
+  border: 3px solid transparent;
+}
+
+.hero-portrait:hover {
+  border: 3px solid rgba(81, 203, 238, 1);
+}

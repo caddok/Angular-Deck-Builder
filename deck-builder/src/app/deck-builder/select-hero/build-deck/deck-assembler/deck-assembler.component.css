@@ -1,0 +1,162 @@
+.assembler-header {
+  position: relative;
+  z-index: 2;
+  border: 4px solid #ddbb5c;
+  height: 11.5%;
+  width: inherit;
+  margin: 0;
+  padding: 0;
+}
+
+.assembler-banner {
+  height: 100%;
+  width: inherit;
+  margin: 0;
+  padding: 0;
+  border: 3px solid #867563;
+}
+
+.deck-specifics {
+  width: 90%;
+  height: inherit;
+  background-size: cover;
+  background-repeat: no-repeat;
+}
+
+.format {
+  width: 35px;
+  height: inherit;
+  background-size: contain;
+  background-repeat: no-repeat;
+  margin-top: 15px;
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
+.deck-title {
+  max-width: calc(100% - 35px);
+  height: inherit;
+  margin: auto;
+}
+
+h4 {
+  text-shadow: #000 2px 0 0, #000 1.75517px 0.95885px 0,
+    #000 1.0806px 1.68294px 0, #000 0.14147px 1.99499px 0,
+    #000 -0.83229px 1.81859px 0, #000 -1.60229px 1.19694px 0,
+    #000 -1.97998px 0.28224px 0, #000 -1.87291px -0.70157px 0,
+    #000 -1.30729px -1.5136px 0, #000 -0.42159px -1.95506px 0,
+    #000 0.56732px -1.91785px 0, #000 1.41734px -1.41108px 0,
+    #000 1.92034px -0.55883px 0;
+  font-family: Belwe Bold;
+  font-weight: 400;
+  z-index: 3;
+  margin-bottom: 5px;
+}
+
+.mana-curve-trigger {
+  width: 20%;
+  height: 68.75px;
+  background-color: #312316;
+}
+
+.toggle {
+  width: 30px;
+  height: 20px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  cursor: pointer;
+}
+
+.mana-curve-menu {
+  width: 300px;
+  height: 190px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  background-image: url("../../../../../assets/images/chart/mana_chart.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.mana-columns-container {
+  width: 235px;
+  height: 130px;
+  margin-left: 20px;
+  margin-bottom: 20px;
+}
+
+.mana-column {
+  width: 5%;
+  margin-bottom: 30px;
+  margin-left: 16.5px;
+  background: rgb(252, 209, 68);
+  transition: all 0.15s ease-out 0s;
+  border: 1px solid rgb(249, 235, 99);
+  border-radius: 2px;
+}
+
+.first {
+  margin-left: 23px;
+}
+
+.card-count {
+  color: white;
+  text-align: center;
+  min-height: calc(100% + 18.5px);
+  margin-left: 2px;
+}
+
+.cards-container {
+  width: inherit;
+  height: calc(100% - 12.75%);
+  overflow-y: hidden;
+  background-color: #392c4a;
+}
+
+.card-crop-item {
+  width: 100%;
+  height: 35px;
+  border: 3px solid transparent;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.mana-cost {
+  width: 25px;
+  height: 100%;
+  background: url("../../../../../assets//images/test_crystal.png") no-repeat center center;
+  background-size: cover;
+  color: white;
+  background-color: #2A2828;
+}
+
+.card-crop {
+  width: 240px;
+  height: 27px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.cards-container-card-count {
+  width: 20px;
+  height: 100%;
+  background-color: #2A2828;
+}
+
+.card-crop-item:hover {
+  border: 3px solid #D5B24F;
+}
+
+h3, span {
+  text-align: center;
+  color: white;
+  text-shadow: rgb(0, 0, 0) 2px 0px 0px, rgb(0, 0, 0) 1.75517px 0.95885px 0px,
+    rgb(0, 0, 0) 1.0806px 1.68294px 0px, rgb(0, 0, 0) 0.14147px 1.99499px 0px,
+    rgb(0, 0, 0) -0.83229px 1.81859px 0px, rgb(0, 0, 0) -1.60229px 1.19694px 0px,
+    rgb(0, 0, 0) -1.97998px 0.28224px 0px,
+    rgb(0, 0, 0) -1.87291px -0.70157px 0px,
+    rgb(0, 0, 0) -1.30729px -1.5136px 0px,
+    rgb(0, 0, 0) -0.42159px -1.95506px 0px,
+    rgb(0, 0, 0) 0.56732px -1.91785px 0px, rgb(0, 0, 0) 1.41734px -1.41108px 0px,
+    rgb(0, 0, 0) 1.92034px -0.55883px 0px;
+}

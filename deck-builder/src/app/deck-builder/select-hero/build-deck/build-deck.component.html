@@ -1,1 +1,99 @@
-<p>build-deck works!</p>
+<div [ngSwitch]="assets.hero">
+  <div class="header" *ngSwitchCase="'Druid'" [ngStyle]="{'background-image': 'url(' + assets.header + ')'}">
+    <h2 fxLayout="column" fxLayoutAlign="end center" class="title">
+      {{format + ' ' + assets.hero + ' ' + 'deck' | titlecase }}
+    </h2>
+  </div>
+  <div class="header" *ngSwitchCase="'Hunter'" [ngStyle]="{'background-image': 'url(' + assets.header + ')'}">
+    <h2 fxLayout="column" fxLayoutAlign="end center" class="title">
+      {{format + ' ' + assets.hero + ' ' + 'deck' | titlecase }}
+    </h2>
+  </div>
+  <div class="header" *ngSwitchCase="'Mage'" [ngStyle]="{'background-image': 'url(' + assets.header + ')'}">
+    <h2 fxLayout="column" fxLayoutAlign="end center" class="title">
+      {{format + ' ' + assets.hero + ' ' + 'deck' | titlecase }}
+    </h2>
+  </div>
+  <div class="header" *ngSwitchCase="'Paladin'" [ngStyle]="{'background-image': 'url(' + assets.header + ')'}">
+    <h2 fxLayout="column" fxLayoutAlign="end center" class="title">
+      {{format + ' ' + assets.hero + ' ' + 'deck' | titlecase }}
+    </h2>
+  </div>
+  <div class="header" *ngSwitchCase="'Priest'" [ngStyle]="{'background-image': 'url(' + assets.header + ')'}">
+    <h2 fxLayout="column" fxLayoutAlign="end center" class="title">
+      {{format + ' ' + assets.hero + ' ' + 'deck' | titlecase }}
+    </h2>
+  </div>
+  <div class="header" *ngSwitchCase="'Rogue'" [ngStyle]="{'background-image': 'url(' + assets.header + ')'}">
+    <h2 fxLayout="column" fxLayoutAlign="end center" class="title">
+      {{format + ' ' + assets.hero + ' ' + 'deck' | titlecase }}
+    </h2>
+  </div>
+  <div class="header" *ngSwitchCase="'Shaman'" [ngStyle]="{'background-image': 'url(' + assets.header + ')'}">
+    <h2 fxLayout="column" fxLayoutAlign="end center" class="title">
+      {{format + ' ' + assets.hero + ' ' + 'deck' | titlecase }}
+    </h2>
+  </div>
+  <div class="header" *ngSwitchCase="'Warlock'" [ngStyle]="{'background-image': 'url(' + assets.header + ')'}">
+    <h2 fxLayout="column" fxLayoutAlign="end center" class="title">
+      {{format + ' ' + assets.hero + ' ' + 'deck' | titlecase }}
+    </h2>
+  </div>
+  <div class="header" *ngSwitchCase="'Warrior'" [ngStyle]="{'background-image': 'url(' + assets.header + ')'}">
+    <h2 fxLayout="column" fxLayoutAlign="end center" class="title">
+      {{format + ' ' + assets.hero + ' ' + 'deck' | titlecase }}
+    </h2>
+  </div>
+</div>
+<div fxLayout="row" class="filter-bar" fxLayoutAlign="start center">
+  <div fxLayout="row" class="icons">
+    <a class="card-icon" [ngStyle]="{'background-image': 'url(' + assets.classIcon + ')'}" role="button"
+      (click)="onShowClassCards()" [class.selected]="areClassCardsShown" style="margin-right: 15px;"></a>
+    <a class="card-icon"
+      [ngStyle]="{'background-image': 'url(' + '../../../../assets/images/icons/neutral_minions_icon.png' + ')'}"
+      role="button" [class.selected]="areNeutralCardsShown" (click)="onShownNeutralCards()"></a>
+  </div>
+  <div class="mana-filter" fxLayout="row" fxLayoutAlign="space-evenly center">
+    <div fxLayout="row" fxLayoutAlign="space-evenly center">
+      <div *ngFor="let mana of manaCosts; let i=index">
+        <button id="mana" class="mana-crystal" type="button" [class.manaSelected]="mana.selected"
+          (click)="onManaCostSelected(mana)">
+          <h4>{{ mana.cost }}</h4>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="search-bar mana-filter" fxLayout="row" fxLayoutAlign="start center">
+    <mat-form-field appearance="standard" style="width: 100%;">
+      <input matInput placeholder="Search" class="search-field" (keyup.enter)="onSearchPhrase($event)">
+      <mat-icon matPrefix [ngStyle]="{'color':'#FFD700'}"></mat-icon>
+      <mat-icon matSuffix color="warn">cancel_outline</mat-icon>
+    </mat-form-field>
+  </div>
+</div>
+<div class="banner-container" fxLayout="row" fxLayoutAlign="center center"
+  [ngStyle]="{'background': 'url(' + assets.heroBanner + ') no-repeat center center'}">
+  <h4 fxFlexAlign="center" style="padding-bottom: 5px;">{{assets.hero | titlecase}}</h4>
+</div>
+<div class="card-container" fxLayout="row">
+  <div class="card-wrapper" fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="20px">
+    <div class="card" *ngFor="let card of testCards">
+      <a role="button">
+        <img [src]="card">
+      </a>
+    </div>
+  </div>
+  <div class="deck-assembler">
+    <app-deck-assembler></app-deck-assembler>
+  </div>
+</div>
+<div class="banner-container neutrals-banner" fxLayout="row" fxLayoutAlign="center center">
+  <h4 fxFlexAlign="center" style="padding-bottom: 5px;">Neutral</h4>
+</div>
+<div class="card-wrapper" fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="20px">
+  <div class="card" *ngFor="let card of testCards">
+    <a role="button">
+      <img [src]="card">
+    </a>
+  </div>
+</div>

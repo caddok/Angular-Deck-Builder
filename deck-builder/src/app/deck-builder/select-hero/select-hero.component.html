@@ -1,1 +1,32 @@
-<p>select-hero works!</p>
+<div>
+  <div class="border-element-horizontal" fxLayout="row" fxLayoutAlign="center center">
+    <input matInput formControlName="deckString" class="deck-code" placeholder="Paste a deck string" id="DeckInputCode">
+    <button [disabled]="deckString.invalid" type="submit" class="import" (click)="onDeckStringSubmit()">Import</button>
+  </div>
+  <div fxLayout="row" class="heroes-container">
+    <div fxFlexAlign="center" class="heroes-container">
+      <div fxLayout="row" class="formats-container" fxLayoutAlign="center center">
+        <div>
+          <span id="standard-title" class="format-title">Standard</span>
+          <button id="standard" class="format-button" [ngClass]="{'format-selected': isStandardFormat}" type="button"
+            (click)="onChangeToStandard()"></button>
+        </div>
+        <div>
+          <button id="wild" class="format-button" [ngClass]="{'format-selected': !isStandardFormat}" type="button"
+            (click)="onChangeToWild()"></button>
+          <span id="wild-title" class="format-title">Wild</span>
+        </div>
+      </div>
+      <div class="heroes-container" fxLayout="row wrap" fxLayoutAlign="center center" fxLayoutGap="30px">
+        <div *ngFor="let portrait of heroPortraits">
+          <a (click)="onHeroSelected(portrait.className)">
+            <div class="hero-portrait">
+              <img [src]="portrait.portraitLocation" [alt]="portrait.className">
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="border-element-horizontal" fxLayout="row"></div>
+</div>

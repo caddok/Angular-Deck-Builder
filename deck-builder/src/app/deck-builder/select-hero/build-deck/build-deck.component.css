@@ -1,0 +1,165 @@
+.header {
+  width: 100%;
+  height: 700px;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.title {
+  color: white;
+  margin-top: 0;
+  height: calc(100% - 50px);
+  font: bold;
+  font-size: 30px;
+  filter: drop-shadow(rgb(0, 0, 0) 2px 2px 5px);
+  z-index: 3;
+}
+
+.filter-bar {
+  width: 100%;
+  height: 120px;
+  background-color: #571616;
+}
+
+.icons {
+  padding-left: 30px;
+  width: 160px;
+  height: 65px;
+}
+
+.card-icon {
+  margin-top: 5px;
+  width: 50px;
+  height: 50px;
+  background-size: contain;
+  background-repeat: no-repeat;
+  border: 3px solid transparent;
+}
+
+.selected {
+  text-decoration: none;
+  border-radius: 50%;
+  border: 3px solid rgba(81, 203, 238, 1);
+}
+
+.mana-filter {
+  margin-left: 50px;
+  width: 370px;
+  height: 42px;
+  margin-right: 5px;
+  border-radius: 15px;
+  padding: 5px;
+  border: 2px solid #cca950;
+}
+
+.mana-filter:hover,
+.mana-filter:focus {
+  border-color: white;
+}
+
+.mana-crystal {
+  background-color: transparent;
+  width: 33px;
+  cursor: pointer;
+  outline: none;
+  height: 42px;
+  border: none;
+  margin: 0;
+  padding: 0;
+  z-index: 101;
+  font-size: 100%;
+}
+
+#mana {
+  background: url("../../../../assets/images/mana_crystal.png") no-repeat center;
+}
+
+#mana:hover {
+  background: url("../../../../assets/images/mana_crystal_hover.png") no-repeat
+    center;
+}
+
+#mana.manaSelected {
+  background: url("../../../../assets/images/mana_crystal_hover.png") no-repeat
+    center;
+}
+
+h4 {
+  color: white;
+  text-shadow: rgb(0, 0, 0) 2px 0px 0px, rgb(0, 0, 0) 1.75517px 0.95885px 0px,
+    rgb(0, 0, 0) 1.0806px 1.68294px 0px, rgb(0, 0, 0) 0.14147px 1.99499px 0px,
+    rgb(0, 0, 0) -0.83229px 1.81859px 0px, rgb(0, 0, 0) -1.60229px 1.19694px 0px,
+    rgb(0, 0, 0) -1.97998px 0.28224px 0px,
+    rgb(0, 0, 0) -1.87291px -0.70157px 0px,
+    rgb(0, 0, 0) -1.30729px -1.5136px 0px,
+    rgb(0, 0, 0) -0.42159px -1.95506px 0px,
+    rgb(0, 0, 0) 0.56732px -1.91785px 0px, rgb(0, 0, 0) 1.41734px -1.41108px 0px,
+    rgb(0, 0, 0) 1.92034px -0.55883px 0px;
+  font-family: "Belwe Bold", Georgia, Times, "Times New Roman", serif !important;
+  margin: 0px;
+  padding: 0px;
+  line-height: 1;
+  text-align: center;
+}
+
+.search-bar {
+  width: 300px;
+  max-width: 100%;
+}
+
+::placeholder {
+  color: #947261;
+}
+
+.search-field {
+  color: white;
+  width: 100%;
+  height: inherit;
+  padding-top: 30px;
+  padding-bottom: 30px;
+}
+
+.banner-container {
+  width: 100%;
+  height: 85px;
+  margin-top: 20px;
+}
+
+.card-container {
+  width: 100%;
+  height: 100%;
+}
+
+.card-wrapper {
+  width: 75%;
+  height: auto;
+  margin-top: 10px;
+  margin-bottom: 50px;
+}
+
+.card {
+  margin-top: 10px;
+  width: 250px;
+  height: 350px;
+}
+
+img {
+  width: 240px;
+  height: 350px;
+}
+
+a {
+  cursor: pointer;
+}
+
+.deck-assembler {
+  margin-left: 30px;
+  width: 300px;
+  height: 650px;
+  border: 5px solid #755236;
+  z-index: 5;
+}
+
+.neutrals-banner {
+  background: url('../../../../assets/images/Banners/neutral_minions_banner.png') no-repeat center center;
+}

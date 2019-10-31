@@ -4,6 +4,7 @@
 
 .toolbar {
   background: #554131;
+  width: 100%;
 }
 
 .menu-item {
@@ -21,7 +22,7 @@
 .logo {
   height: 116px;
   width: 235px;
-  background: url(../../images/HearthStone_logo.png);
+  background: url(../../assets/images/HearthStone_logo.png);
   margin-left: 0px;
   margin-right: 10px;
   cursor: pointer;
