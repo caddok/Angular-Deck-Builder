@@ -45,7 +45,7 @@
     </h2>
   </div>
 </div>
-<div fxLayout="row" class="filter-bar" fxLayoutAlign="start center">
+<div fxLayout="row" class="filter-bar" fxLayoutAlign="space-evenly center">
   <div fxLayout="row" class="icons">
     <a class="card-icon" [ngStyle]="{'background-image': 'url(' + assets.classIcon + ')'}" role="button"
       (click)="onShowClassCards()" [class.selected]="areClassCardsShown" style="margin-right: 15px;"></a>
@@ -53,7 +53,7 @@
       [ngStyle]="{'background-image': 'url(' + '../../../../assets/images/icons/neutral_minions_icon.png' + ')'}"
       role="button" [class.selected]="areNeutralCardsShown" (click)="onShownNeutralCards()"></a>
   </div>
-  <div class="mana-filter" fxLayout="row" fxLayoutAlign="space-evenly center">
+  <div class="mana-filter" fxLayout="row" fxLayoutAlign="start center">
     <div fxLayout="row" fxLayoutAlign="space-evenly center">
       <div *ngFor="let mana of manaCosts; let i=index">
         <button id="mana" class="mana-crystal" type="button" [class.manaSelected]="mana.selected"
@@ -63,37 +63,61 @@
       </div>
     </div>
   </div>
-  <div class="search-bar mana-filter" fxLayout="row" fxLayoutAlign="start center">
-    <mat-form-field appearance="standard" style="width: 100%;">
-      <input matInput placeholder="Search" class="search-field" (keyup.enter)="onSearchPhrase($event)">
-      <mat-icon matPrefix [ngStyle]="{'color':'#FFD700'}"></mat-icon>
-      <mat-icon matSuffix color="warn">cancel_outline</mat-icon>
-    </mat-form-field>
+  <div class="search-bar mana-filter" fxLayout="row" fxLayoutAlign="center center">
+    <mat-icon matPrefix [ngStyle]="{'color':'#FFD700'}">search</mat-icon>
+    <input placeholder="Search" class="search-field" (keyup.enter)="onSearchPhrase($event)" [(ngModel)]="searchFilter">
+    <a (click)="onClearSearchFilter()" style="cursor: pointer; max-width: 24px; max-height: 24px;">
+      <mat-icon matSuffix color="warn" style="width: 100%; height: 100%;">cancel_outline</mat-icon>
+    </a>
   </div>
 </div>
+<div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
+  <mat-progress-spinner mode="indeterminate" class="spinner" fxFlexAlign="center"></mat-progress-spinner>
+</div>
 <div class="banner-container" fxLayout="row" fxLayoutAlign="center center"
-  [ngStyle]="{'background': 'url(' + assets.heroBanner + ') no-repeat center center'}">
+  [ngStyle]="{'background': 'url(' + assets.heroBanner + ') no-repeat center center'}"
+  *ngIf="!isLoading && areClassCardsShown">
   <h4 fxFlexAlign="center" style="padding-bottom: 5px;">{{assets.hero | titlecase}}</h4>
 </div>
-<div class="card-container" fxLayout="row">
-  <div class="card-wrapper" fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="20px">
-    <div class="card" *ngFor="let card of testCards">
-      <a role="button">
-        <img [src]="card">
+<div fxLayout="row wrap" class="card-box" fxLayoutAlign="start start">
+  <div class="card-container" fxLayout="row">
+    <div class="card-wrapper" fxLayout="row wrap" fxLayoutAlign="start start" *ngIf="areClassCardsShown && !isLoading">
+      <div class="card" *ngFor="let card of classCards">
+        <a role="button" (click)="onAddToDeckAssembler(card)" fxLayout="row" fxLayoutAlign="center start"
+          [ngClass]="{'locked': card.maxCount === card.count}" *ngIf="areClassCardsShown">
+          <img [src]="card.image" [alt]="card.name">
+          <div fxLayout="row" fxLayoutAlign="center center" fxFlexAlign="end" *ngIf="card.isAdded" [ngClass]="{
+            'cardAdded': card.maxCount > card.count,
+            'cardLocked': card.maxCount === card.count,
+            'locked': card.maxCount === card.count}">
+            <h4 style="margin-left: 5px; text-align: center;"> {{card.count}} / {{ card.isLegendary ? '1' : '2' }}
+            </h4>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+  <div class="banner-container neutrals-banner" fxLayout="row" fxLayoutAlign="center center"
+    *ngIf="!isLoading && areNeutralCardsShown">
+    <h4 fxFlexAlign="center" style="padding-bottom: 5px;">Neutral</h4>
+  </div>
+  <div fxLayout="row wrap" fxLayoutAlign="start start" class="card-wrapper" style="margin-left: 20px;">
+    <div class="card" *ngFor="let card of neutralCards" fxLayout="row wrap" fxLayoutAlign="start start">
+      <a role="button" (click)="onAddToDeckAssembler(card)" fxLayout="row" fxLayoutAlign="center start"
+        [ngClass]="{'locked': card.maxCount === card.count}" *ngIf="areNeutralCardsShown">
+        <img [src]="card.image" [alt]="card.name">
+        <div fxLayout="row" fxLayoutAlign="center center" fxFlexAlign="end" *ngIf="card.isAdded" [ngClass]="{
+        'cardAdded': card.maxCount > card.count,
+        'cardLocked': card.maxCount === card.count,
+        'locked': card.maxCount === card.count}">
+          <h4 style="margin-left: 5px; text-align: center;"> {{card.count}} / {{ card.isLegendary ? '1' : '2' }}</h4>
+        </div>
       </a>
     </div>
   </div>
-  <div class="deck-assembler">
+</div>
+<div fxLayout="row" fxLayoutAlign="start start" class="deck-assembler-container">
+  <div class="deck-assembler" *ngIf="isDeckAssemblerShown && !isLoading">
     <app-deck-assembler></app-deck-assembler>
-  </div>
-</div>
-<div class="banner-container neutrals-banner" fxLayout="row" fxLayoutAlign="center center">
-  <h4 fxFlexAlign="center" style="padding-bottom: 5px;">Neutral</h4>
-</div>
-<div class="card-wrapper" fxLayout="row wrap" fxLayoutAlign="start start" fxLayoutGap="20px">
-  <div class="card" *ngFor="let card of testCards">
-    <a role="button">
-      <img [src]="card">
-    </a>
   </div>
 </div>

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DeckBuilderService } from './select-hero/build-deck/deck-builder.service';
 
 @Component({
   selector: 'app-deck-builder',
@@ -7,9 +8,16 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DeckBuilderComponent implements OnInit {
 
-  constructor() { }
+  private apiTokenExpireTime: number;
+
+  constructor(private deckService: DeckBuilderService) { }
 
   ngOnInit() {
+    this.apiTokenExpireTime = +localStorage.getItem('apiTokenExpiresIn');
+    if (new Date().getTime() >= this.apiTokenExpireTime || !localStorage.getItem('apiTokenExpiresIn')) {
+      localStorage.setItem('apiToken', '');
+      this.deckService.getAccessToken();
+    }
   }
 
 }

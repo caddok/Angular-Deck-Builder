@@ -5,7 +5,7 @@
       <div class="format" fxFlexAlign="start" [ngStyle]="{'background-image': 'url(' + getFormatIcon() + ')'}"></div>
       <div class="deck-title">
         <h4 style="color: white;" fxFlexAlign="start">{{ deckTitle | titlecase}}</h4>
-        <h4 style="color: rgb(252, 209, 68);; margin-top: 0;">{{ cardCount + '/' + '30'}}</h4>
+        <h4 style="color: rgb(252, 209, 68);; margin-top: 0;">{{ currentCardCount + '/' + '30'}}</h4>
       </div>
     </div>
     <div class="mana-curve-trigger" fxLayout="row" fxLayoutAlign="center center">
@@ -19,8 +19,8 @@
 <div fxLayout="row" fxLayoutAlign="start end" class="mana-curve-menu" *ngIf="isMenuOpen">
   <div class="mana-columns-container" fxLayout="row" fxLayoutAlign="start end">
     <div fxLayout="row" fxFlexAlign="end" class="mana-column first"
-      [ngStyle]="{'height': calculateHeight(zerCost.cardCount)}">
-      <span fxFlexAlign="end" class="card-count">{{zerCost.cardCount}}</span>
+      [ngStyle]="{'height': calculateHeight(manaCurve.cardCount)}">
+      <span fxFlexAlign="end" class="card-count"></span>
     </div>
     <div fxLayout="row" fxFlexAlign="end" class="mana-column" *ngFor="let mana of manaCurve; let i=index"
       [ngStyle]="{'height': calculateHeight(mana.cardCount)}">
@@ -30,15 +30,17 @@
 </div>
 <div class="cards-container">
   <div fxLayout="column" fxLayoutAlign="start start">
-    <div fxLayout="row" class="card-crop-item" *ngFor="let crop of testCrops">
+    <div fxLayout="row" class="card-crop-item" *ngFor="let card of selectedCards"
+      (click)="onRemoveFromDeck(card)">
       <div fxFlexAlign="start" class="mana-cost" fxLayout="row" fxLayoutAlign="center center">
-        <span>5</span>
+        <span>{{ card.manaCost }}</span>
       </div>
-      <div class="card-crop" [ngStyle]="{'background-image': 'url(' + crop + ')'}" fxLayout="row" fxLayoutAlign="start center">
-        <span style="margin-left: 10px;">Druid of the claw</span>
+      <div class="card-crop" [ngStyle]="{'background-image': 'url(' + card.imageCrop + ')'}" fxLayout="row"
+        fxLayoutAlign="start center">
+        <span style="margin-left: 10px;">{{ card.name }}</span>
       </div>
       <div fxFlexAlign="end" class="cards-container-card-count" fxLayoutAlign="center center">
-        <h3>1</h3>
+        <h3>{{ card.count }}</h3>
       </div>
     </div>
   </div>

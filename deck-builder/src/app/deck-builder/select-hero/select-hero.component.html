@@ -1,7 +1,7 @@
 <div>
   <div class="border-element-horizontal" fxLayout="row" fxLayoutAlign="center center">
-    <input matInput formControlName="deckString" class="deck-code" placeholder="Paste a deck string" id="DeckInputCode">
-    <button [disabled]="deckString.invalid" type="submit" class="import" (click)="onDeckStringSubmit()">Import</button>
+    <input matInput class="deck-code" placeholder="Paste a deck string" id="DeckInputCode">
+    <button [disabled]="deckString.invalid" type="submit" class="import" (click)="onDeckStringSubmit($event)">Import</button>
   </div>
   <div fxLayout="row" class="heroes-container">
     <div fxFlexAlign="center" class="heroes-container">

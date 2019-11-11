@@ -22,7 +22,7 @@
 }
 
 .icons {
-  padding-left: 30px;
+  margin-left: 0%;
   width: 160px;
   height: 65px;
 }
@@ -128,19 +128,22 @@ h4 {
 .card-container {
   width: 100%;
   height: 100%;
+  margin-left: 20px;
 }
 
 .card-wrapper {
-  width: 75%;
+  width: 100%;
   height: auto;
   margin-top: 10px;
   margin-bottom: 50px;
 }
 
 .card {
+  position: relative;
   margin-top: 10px;
   width: 250px;
   height: 350px;
+  z-index: 10;
 }
 
 img {
@@ -153,13 +156,78 @@ a {
 }
 
 .deck-assembler {
-  margin-left: 30px;
   width: 300px;
   height: 650px;
   border: 5px solid #755236;
-  z-index: 5;
+  position: sticky;
 }
 
 .neutrals-banner {
-  background: url('../../../../assets/images/Banners/neutral_minions_banner.png') no-repeat center center;
+  background: url("../../../../assets/images/Banners/neutral_minions_banner.png")
+    no-repeat center center;
+}
+
+.spinner {
+  width: 100%;
+  height: 100%;
+  margin-top: 20px;
+}
+
+.search-field {
+  width: inherit;
+  height: 42px;
+  text-decoration: none;
+  background: transparent;
+  border: 0px transparent;
+  outline: none;
+}
+
+.cardAdded {
+  position: absolute;
+  width: 80px;
+  height: 54px;
+  background: url("../../../../assets/images/card_selected.png") no-repeat
+    center center;
+  background-size: contain;
+  position: absolute;
+  z-index: 10;
+  margin-top: 10px;
+}
+
+.cardLocked {
+  position: absolute;
+  width: 100px;
+  height: 54px;
+  background: url("../../../../assets/images/card_locked.png") no-repeat scroll
+    center top;
+  background-size: contain;
+  position: absolute;
+  z-index: 10;
+  margin-top: 10px;
+  color: red;
+  transform: matrix(1, 0, 0, 1, 2, -1);
+}
+
+.locked {
+  filter: brightness(0.6);
+}
+
+.card-box {
+  width: 70%;
+  height: 100%;
+}
+
+.deck-assembler-container {
+  width: 30vw;
+  height: auto;
+  margin-top: 40px;
+  padding-left: 50px;
+  position: absolute;
+  right: 0;
+  top: 100%;
+}
+
+.hideClassCardsContainer {
+  width: 0%;
+  height: 0%;
 }

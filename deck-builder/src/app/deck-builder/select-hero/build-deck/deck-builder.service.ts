@@ -1,5 +1,21 @@
+import { CardSearchResponse } from './deck-builder.service';
 import { Injectable } from '@angular/core';
-import { HeroAssets } from 'src/app/shared/hero-assets.model';
+import { HeroAssets } from 'src/app/shared/models/hero-assets.model';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { Card } from 'src/app/shared/models/card.model';
+import { AuthApiResponse } from 'src/app/shared/interfaces/api-responses/auth-api-response';
+import { CardApiResponse } from 'src/app/shared/interfaces/api-responses/card-api-response';
+import { DeckBuilderUtils } from 'src/app/shared/utils/deck-builder.utils';
+import { Subject } from 'rxjs';
+
+
+export interface CardSearchResponse {
+  cards: CardApiResponse[];
+  cardCount: number;
+  pageCount: number;
+  page: number;
+  isLegendary: boolean;
+}
 
 @Injectable({
   providedIn: 'root'
@@ -44,50 +60,93 @@ export class DeckBuilderService {
       '../../../../assets/images/DeckBanners/hearthstone_warrior_banner.png', 'Warrior',
       '../../../../assets/images/icons/warrior_class_icon.png'),
   ];
-  heroName: string;
-  format: string;
-  private hero: HeroAssets;
+  private classCardsPage = 0;
+  private neutralCardsPage = 0;
+  selectedManaFilters: number[];
+  builderUtils: DeckBuilderUtils = new DeckBuilderUtils();
+  selectedCard: Subject<Card> = new Subject();
+  isMaxCardCountReached = false;
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   private getAssets() {
-    switch (this.heroName) {
+    switch (localStorage.getItem('selectedHero')) {
       case 'Druid':
-        this.hero = this.assets[0];
-        break;
+        return this.assets[0];
       case 'Hunter':
-        this.hero = this.assets[1];
-        break;
+        return this.assets[1];
       case 'Mage':
-        this.hero = this.assets[2];
-        break;
+        return this.assets[2];
       case 'Paladin':
-        this.hero = this.assets[3];
-        break;
+        return this.assets[3];
       case 'Priest':
-        this.hero = this.assets[4];
-        break;
+        return this.assets[4];
       case 'Rogue':
-        this.hero = this.assets[5];
-        break;
+        return this.assets[5];
       case 'Shaman':
-        this.hero = this.assets[6];
-        break;
+        return this.assets[6];
       case 'Warlock':
-        this.hero = this.assets[7];
-        break;
+        return this.assets[7];
       case 'Warrior':
-        this.hero = this.assets[8];
-        break;
+        return this.assets[8];
     }
   }
 
   getHero() {
-    this.getAssets();
-    return this.hero;
+    return this.getAssets();
   }
 
-  getFormat() {
-    return this.format;
+  getAccessToken() {
+    this.http.post<AuthApiResponse>('https://eu.battle.net/oauth/token', null)
+      .subscribe((response: AuthApiResponse) => {
+        localStorage.setItem('apiToken', response.access_token);
+        const expiresInMillis: string = '' + (new Date().getTime() + (+response.expires_in * 1000));
+        localStorage.setItem('apiTokenExpiresIn', expiresInMillis);
+      });
+  }
+
+  addManaFilter(manaCost: number) {
+    this.selectedManaFilters.push(manaCost);
+  }
+
+  removeManaFilter(manaCost: number) {
+    const index = this.selectedManaFilters.indexOf(manaCost);
+    if (index > -1) {
+      this.selectedManaFilters.splice(index, 1);
+    }
+  }
+
+  getClassCards() {
+    ++this.classCardsPage;
+    return this.http.get<CardSearchResponse>('https://eu.api.blizzard.com/hearthstone/cards', {
+      params: new HttpParams()
+        .append('set', localStorage.getItem('selectedFormat'))
+        .append('class', localStorage.getItem('selectedHero').toLowerCase())
+        .append('page', '' + this.classCardsPage)
+    }
+    );
+  }
+
+  getNeutralCards() {
+    ++this.neutralCardsPage;
+    return this.http.get<CardSearchResponse>('https://eu.api.blizzard.com/hearthstone/cards', {
+      params: new HttpParams()
+        .append('set', localStorage.getItem('selectedFormat'))
+        .append('class', 'neutral')
+        .append('page', '' + this.neutralCardsPage)
+    });
+  }
+
+  resetPageCounters() {
+    this.classCardsPage = 0;
+    this.neutralCardsPage = 0;
+  }
+
+  addCard(card: Card) {
+    ++card.count;
+    if (card.count > 0 && !this.isMaxCardCountReached) {
+      card.isAdded = true;
+      this.selectedCard.next(card);
+    }
   }
 }

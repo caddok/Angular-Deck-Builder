@@ -1,4 +1,4 @@
-import { FlexLayoutModule } from '@angular/flex-layout';
+import { FlexLayoutModule, BREAKPOINTS, DEFAULT_BREAKPOINTS } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCheckboxModule, MatNativeDateModule } from '@angular/material';
 import { MatButtonModule } from '@angular/material';
@@ -14,22 +14,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
-<<<<<<< HEAD
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { FlexLayoutModule, BREAKPOINTS, DEFAULT_BREAKPOINTS } from '@angular/flex-layout';
-import { MatMenuModule } from '@angular/material/menu';
-import { ChartsModule } from 'ng2-charts';
-import { from } from 'rxjs';
-
-export const BreakPointsProvider = {
-  provide: BREAKPOINTS,
-  useValue: DEFAULT_BREAKPOINTS,
-  multi: true
-};
-=======
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatCardModule } from '@angular/material/card';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -47,7 +31,12 @@ import { MatTableModule } from '@angular/material/table';
 import { MatSortModule } from '@angular/material/sort';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { NgModule } from '@angular/core';
->>>>>>> master
+
+export const BreakPointsProvider = {
+  provide: BREAKPOINTS,
+  useValue: DEFAULT_BREAKPOINTS,
+  multi: true
+};
 
 @NgModule({
   declarations: [],
@@ -72,15 +61,6 @@ import { NgModule } from '@angular/core';
     MatSidenavModule,
     MatToolbarModule,
     MatListModule,
-<<<<<<< HEAD
-    FlexLayoutModule,
-    MatFormFieldModule,
-    MatButtonModule,
-    MatInputModule,
-    MatIconModule,
-    MatMenuModule,
-    ChartsModule
-=======
     MatGridListModule,
     MatCardModule,
     MatStepperModule,
@@ -99,7 +79,6 @@ import { NgModule } from '@angular/core';
     MatPaginatorModule,
     FlexLayoutModule,
     MatNativeDateModule
->>>>>>> master
   ]
 })
 export class MaterialComponentsModule { }

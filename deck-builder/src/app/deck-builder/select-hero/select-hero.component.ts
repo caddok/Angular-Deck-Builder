@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { Router, NavigationExtras, ActivatedRoute } from '@angular/router';
+import { DeckBuilderService } from './build-deck/deck-builder.service';
 
 export class HeroPortrait {
 
@@ -30,13 +31,13 @@ export class SelectHeroComponent implements OnInit {
     new HeroPortrait('../../../assets/images/heroes/warrior_hero_image.png', 'Warrior')
   ];
 
-  constructor(private router: Router, private route: ActivatedRoute) { }
+  constructor(private router: Router, private deckService: DeckBuilderService) { }
 
   ngOnInit() {
     this.deckString = new FormControl('', [Validators.required]);
   }
 
-  onDeckStringSubmit() {
+  onDeckStringSubmit(event: any) {
     console.log(this.deckString.value);
   }
 
@@ -51,6 +52,10 @@ export class SelectHeroComponent implements OnInit {
   }
 
   onHeroSelected(className: string) {
+    localStorage.setItem('selectedFormat', this.isStandardFormat ? 'standard' : 'wild');
+    localStorage.setItem('selectedHero', className);
+    // this.deckService.format = this.isStandardFormat ? 'standard' : 'wild';
+    // this.deckService.heroName = className;
     this.router.navigate(['builddeck', className, this.isStandardFormat ? 'standard' : 'wild']);
   }
 }

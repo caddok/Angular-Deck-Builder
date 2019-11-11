@@ -16,17 +16,15 @@ import { MyDecksComponent } from './my-decks/my-decks.component';
 import { MyDecksEditComponent } from './my-decks/my-decks-edit/my-decks-edit.component';
 import { LoginComponent } from './auth/login/login.component';
 import { SignupComponent } from './auth/signup/signup.component';
-<<<<<<< HEAD
 import { DeckAssemblerComponent } from './deck-builder/select-hero/build-deck/deck-assembler/deck-assembler.component';
-=======
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { StoreModule } from '@ngrx/store';
 import * as fromApp from './store/app.reducer';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthEffects } from './auth/store/auth.effects';
-import { StoreDevtoolsModule } from '@ngrx/store-devtools';
-import { HttpClientModule } from '@angular/common/http';
->>>>>>> master
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { BuilderEffects } from './deck-builder/store/builder.effects';
+import { ApiInterceptor } from './shared/api-interceptor.service';
 
 @NgModule({
   declarations: [
@@ -49,13 +47,19 @@ import { HttpClientModule } from '@angular/common/http';
     MaterialComponentsModule,
     AppRoutingModule,
     StoreModule.forRoot(fromApp.appReducer),
-    EffectsModule.forRoot([AuthEffects]),
-    StoreDevtoolsModule.instrument({ logOnly: environment.production }),
+    EffectsModule.forRoot([AuthEffects, BuilderEffects]),
     FormsModule,
     HttpClientModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers:
+    [
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: ApiInterceptor,
+        multi: true
+      }
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
