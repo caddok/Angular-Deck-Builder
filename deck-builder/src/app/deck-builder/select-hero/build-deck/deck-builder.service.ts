@@ -8,7 +8,6 @@ import { CardApiResponse } from 'src/app/shared/interfaces/api-responses/card-ap
 import { DeckBuilderUtils } from 'src/app/shared/utils/deck-builder.utils';
 import { Subject } from 'rxjs';
 
-
 export interface CardSearchResponse {
   cards: CardApiResponse[];
   cardCount: number;
@@ -26,46 +25,47 @@ export class DeckBuilderService {
     new HeroAssets('../../../../assets/images/hero-headers/druid_header.jpg',
       '../../../../assets/images/Banners/druid_banner.png',
       '../../../../assets/images/DeckBanners/hearthstone_druid_banner.png', 'Druid',
-      '../../../../assets/images/icons/druid_class_icon.png'),
+      '../../../../assets/images/icons/druid_class_icon.png', 274),
     new HeroAssets('../../../../assets/images/hero-headers/hunter_header.jpg',
       '../../../../assets/images/Banners/hunter_banner.png',
       '../../../../assets/images/DeckBanners/hearthstone_hunter_banner.png', 'Hunter',
-      '../../../../assets/images/icons/hunter_class_icon.png'),
+      '../../../../assets/images/icons/hunter_class_icon.png', 31),
     new HeroAssets('../../../../assets/images/hero-headers/mage_header.jpg',
       '../../../../assets/images/Banners/mage_banner2.png',
       '../../../../assets/images/DeckBanners/hearthstone_mage_banner.png', 'Mage',
-      '../../../../assets/images/icons/mage_class_icon.png'),
+      '../../../../assets/images/icons/mage_class_icon.png', 637),
     new HeroAssets('../../../../assets/images/hero-headers/paladin_header.jpg',
       '../../../../assets/images/Banners/paladin_banner2.png',
       '../../../../assets/images/DeckBanners/hearthstone_paladin_banner.png', 'Paladin',
-      '../../../../assets/images/icons/paladin_class_icon.png'),
+      '../../../../assets/images/icons/paladin_class_icon.png', 671),
     new HeroAssets('../../../../assets/images/hero-headers/priest_header.jpg',
       '../../../../assets/images/Banners/priest_banner.png',
       '../../../../assets/images/DeckBanners/hearthstone_priest_banner.png', 'Priest',
-      '../../../../assets/images/icons/priest_class_icon.png'),
+      '../../../../assets/images/icons/priest_class_icon.png', 813),
     new HeroAssets('../../../../assets/images/hero-headers/rogue_header.jpg',
       '../../../../assets/images/Banners/rogue_banner.png',
       '../../../../assets/images/DeckBanners/hearthstone_rogue_banner.png', 'Rogue',
-      '../../../../assets/images/icons/rogue_class_icon.png'),
+      '../../../../assets/images/icons/rogue_class_icon.png', 930),
     new HeroAssets('../../../../assets/images/hero-headers/shaman_header.jpg',
       '../../../../assets/images/Banners/shaman_banner.png',
       '../../../../assets/images/DeckBanners/hearthstone_shaman_banner.png', 'Shaman',
-      '../../../../assets/images/icons/shaman_class_icon.png'),
+      '../../../../assets/images/icons/shaman_class_icon.png', 1066),
     new HeroAssets('../../../../assets/images/hero-headers/warlock_header.jpg',
       '../../../../assets/images/Banners/warlock_banner.png',
       '../../../../assets/images/DeckBanners/hearthstone_warlock_banner.png', 'Warlock',
-      '../../../../assets/images/icons/warlock_class_icon.png'),
+      '../../../../assets/images/icons/warlock_class_icon.png', 893),
     new HeroAssets('../../../../assets/images/hero-headers/warrior_header.jpg',
       '../../../../assets/images/Banners/warrior_banner.png',
       '../../../../assets/images/DeckBanners/hearthstone_warrior_banner.png', 'Warrior',
-      '../../../../assets/images/icons/warrior_class_icon.png'),
+      '../../../../assets/images/icons/warrior_class_icon.png', 7),
   ];
   private classCardsPage = 0;
   private neutralCardsPage = 0;
-  selectedManaFilters: number[];
+  selectedManaFilters: number[] = [];
   builderUtils: DeckBuilderUtils = new DeckBuilderUtils();
   selectedCard: Subject<Card> = new Subject();
   isMaxCardCountReached = false;
+  format: string;
 
   constructor(private http: HttpClient) { }
 
@@ -97,6 +97,7 @@ export class DeckBuilderService {
   }
 
   getAccessToken() {
+
     this.http.post<AuthApiResponse>('https://eu.battle.net/oauth/token', null)
       .subscribe((response: AuthApiResponse) => {
         localStorage.setItem('apiToken', response.access_token);

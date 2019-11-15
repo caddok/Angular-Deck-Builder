@@ -5,7 +5,7 @@
       <div class="format" fxFlexAlign="start" [ngStyle]="{'background-image': 'url(' + getFormatIcon() + ')'}"></div>
       <div class="deck-title">
         <h4 style="color: white;" fxFlexAlign="start">{{ deckTitle | titlecase}}</h4>
-        <h4 style="color: rgb(252, 209, 68);; margin-top: 0;">{{ currentCardCount + '/' + '30'}}</h4>
+        <h4 style="color: rgb(252, 209, 68); margin-top: 0;">{{ currentCardCount + '/' + '30'}}</h4>
       </div>
     </div>
     <div class="mana-curve-trigger" fxLayout="row" fxLayoutAlign="center center">
@@ -30,18 +30,20 @@
 </div>
 <div class="cards-container">
   <div fxLayout="column" fxLayoutAlign="start start">
-    <div fxLayout="row" class="card-crop-item" *ngFor="let card of selectedCards"
-      (click)="onRemoveFromDeck(card)">
-      <div fxFlexAlign="start" class="mana-cost" fxLayout="row" fxLayoutAlign="center center">
+    <div fxLayout="row" class="card-crop-item" *ngFor="let card of selectedCards" (click)="onRemoveFromDeck(card)">
+      <div fxFlexAlign="start" class="mana-cost" fxFlex="10" fxLayout="row" fxLayoutAlign="center center">
         <span>{{ card.manaCost }}</span>
       </div>
       <div class="card-crop" [ngStyle]="{'background-image': 'url(' + card.imageCrop + ')'}" fxLayout="row"
-        fxLayoutAlign="start center">
+        fxLayoutAlign="start center" fxFlex="80">
         <span style="margin-left: 10px;">{{ card.name }}</span>
       </div>
-      <div fxFlexAlign="end" class="cards-container-card-count" fxLayoutAlign="center center">
-        <h3>{{ card.count }}</h3>
+      <div fxFlexAlign="end" class="cards-container-card-count" fxLayoutAlign="center center" fxFlex="10">
+        <h3 fxFlexAlign="center">{{ card.count }}</h3>
       </div>
     </div>
   </div>
+</div>
+<div class="deck-code-container" fxLayout="row">
+  <button role="button" (click)="onCopyDeckCode($event)" [disabled]="(currentCardCount < maxCardCount)">{{ 'Copy deck code' | uppercase }}</button>
 </div>

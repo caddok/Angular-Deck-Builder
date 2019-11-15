@@ -28,31 +28,6 @@ export const reducer = createReducer(
     ...state,
     isLoading: true
   })),
-  on(BuilderActions.searchClassCardsSuccess, (state, action) => ({
-    ...state,
-    isLoading: false,
-    classCards: [...action.cards]
-  })),
-  on(BuilderActions.searchClassCardsFail, (state, action) => ({
-    ...state,
-    isLoading: false,
-    classCards: []
-  })),
-  on(BuilderActions.searchNeutralCardsSuccess, (state, action) => ({
-    ...state,
-    isLoading: false,
-    neutralCards: [...action.cards]
-  })),
-  on(BuilderActions.searchNeutralCardsFail, (state, action) => ({
-    ...state,
-    isLoading: false,
-    neutralCards: []
-  })),
-  on(BuilderActions.searchNoResults, state => ({
-    ...state,
-    isLoading: false,
-    error: 'Not found'
-  })),
   on(BuilderActions.resetDeckBuilder, (state, action) => ({
     ...state,
     classCards: action.classCards,
@@ -63,9 +38,5 @@ export const reducer = createReducer(
     classCards: action.classCards,
     neutralCards: action.neutralCards,
     isLoading: false
-  })),
-  on(BuilderActions.addToAssembler, (state, action) => ({
-    ...state,
-    selectedCard: action.card
   }))
 );

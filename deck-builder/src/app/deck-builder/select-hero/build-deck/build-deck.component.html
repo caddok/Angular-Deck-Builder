@@ -74,35 +74,51 @@
 <div *ngIf="isLoading" fxLayout="row" fxLayoutAlign="center center">
   <mat-progress-spinner mode="indeterminate" class="spinner" fxFlexAlign="center"></mat-progress-spinner>
 </div>
-<div class="banner-container" fxLayout="row" fxLayoutAlign="center center"
-  [ngStyle]="{'background': 'url(' + assets.heroBanner + ') no-repeat center center'}"
-  *ngIf="!isLoading && areClassCardsShown">
-  <h4 fxFlexAlign="center" style="padding-bottom: 5px;">{{assets.hero | titlecase}}</h4>
-</div>
-<div fxLayout="row wrap" class="card-box" fxLayoutAlign="start start">
-  <div class="card-container" fxLayout="row">
-    <div class="card-wrapper" fxLayout="row wrap" fxLayoutAlign="start start" *ngIf="areClassCardsShown && !isLoading">
-      <div class="card" *ngFor="let card of classCards">
-        <a role="button" (click)="onAddToDeckAssembler(card)" fxLayout="row" fxLayoutAlign="center start"
-          [ngClass]="{'locked': card.maxCount === card.count}" *ngIf="areClassCardsShown">
-          <img [src]="card.image" [alt]="card.name">
-          <div fxLayout="row" fxLayoutAlign="center center" fxFlexAlign="end" *ngIf="card.isAdded" [ngClass]="{
+<div fxLayout="row-reverse wrap" class="card-box" fxLayoutAlign="start start">
+  <div class="banner-container" fxLayout="row" fxLayoutAlign="center center"
+    [ngStyle]="{'background': 'url(' + assets.heroBanner + ') no-repeat center center'}"
+    *ngIf="(!isLoading && areClassCardsShown) || !!hasFoundNoCards">
+    <h4 fxFlexAlign="center" style="padding-bottom: 5px;">{{assets.hero | titlecase}}</h4>
+  </div>
+  <div class="deck-assembler-container" fxFlex="30">
+    <div class="deck-assembler" *ngIf="isDeckAssemblerShown && !isLoading">
+      <app-deck-assembler></app-deck-assembler>
+    </div>
+  </div>
+  <div class="error-container" fxLayout="row" *ngIf="hasFoundNoCards">
+    <div class="error-wrapper">
+      <div class="error-background" fxLayout="row" fxLayoutAlign="center center"></div>
+      <div class="error-border" fxLayout="row" fxLayoutAlign="center end"></div>
+    </div>
+    <div class="error-message-wrapper" fxLayout="row" fxFlexAlign="center" fxLayoutAlign="center end">
+      <h5 style="color: rgb(97, 67, 38);">No cards found</h5>
+    </div>
+  </div>
+  <!-- Initialy shown class cards -->
+  <div class="card-wrapper" fxLayout="row wrap" [ngClass]="{'hideClassCardsContainer': !areClassCardsShown}" fxFlex="70"
+    *ngIf="!hasFoundNoCards">
+    <div class="card" *ngFor="let card of getClassCards()">
+      <a role="button" (click)="onAddToDeckAssembler(card)" fxLayout="row" fxLayoutAlign="center start"
+        [ngClass]="{'locked': card.maxCount === card.count}" *ngIf="areClassCardsShown">
+        <img [src]="card.image" [alt]="card.name">
+        <div fxLayout="row" fxLayoutAlign="center center" fxFlexAlign="end" *ngIf="card.isAdded" [ngClass]="{
             'cardAdded': card.maxCount > card.count,
             'cardLocked': card.maxCount === card.count,
             'locked': card.maxCount === card.count}">
-            <h4 style="margin-left: 5px; text-align: center;"> {{card.count}} / {{ card.isLegendary ? '1' : '2' }}
-            </h4>
-          </div>
-        </a>
-      </div>
+          <h4 style="margin-left: 5px; text-align: center;"> {{card.count}} / {{ card.isLegendary ? '1' : '2' }}
+          </h4>
+        </div>
+      </a>
     </div>
   </div>
   <div class="banner-container neutrals-banner" fxLayout="row" fxLayoutAlign="center center"
-    *ngIf="!isLoading && areNeutralCardsShown">
+    *ngIf="(!isLoading && areNeutralCardsShown) || !!hasFoundNoCards">
     <h4 fxFlexAlign="center" style="padding-bottom: 5px;">Neutral</h4>
   </div>
-  <div fxLayout="row wrap" fxLayoutAlign="start start" class="card-wrapper" style="margin-left: 20px;">
-    <div class="card" *ngFor="let card of neutralCards" fxLayout="row wrap" fxLayoutAlign="start start">
+  <!-- Initialy shown neutral cards -->
+  <div fxLayout="row wrap" fxLayoutAlign="start start" class="card-wrapper" style="margin-left: 20px;" fxFlex="70"
+    *ngIf="!hasFoundNoCards">
+    <div class="card" *ngFor="let card of getNeutralCards()" fxLayout="row wrap" fxLayoutAlign="start start">
       <a role="button" (click)="onAddToDeckAssembler(card)" fxLayout="row" fxLayoutAlign="center start"
         [ngClass]="{'locked': card.maxCount === card.count}" *ngIf="areNeutralCardsShown">
         <img [src]="card.image" [alt]="card.name">
@@ -115,9 +131,5 @@
       </a>
     </div>
   </div>
-</div>
-<div fxLayout="row" fxLayoutAlign="start start" class="deck-assembler-container">
-  <div class="deck-assembler" *ngIf="isDeckAssemblerShown && !isLoading">
-    <app-deck-assembler></app-deck-assembler>
-  </div>
+
 </div>

@@ -1,10 +1,10 @@
+import { encode, DeckDefinition } from 'deckstrings';
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { DeckBuilderService } from '../deck-builder.service';
 import { HeroAssets } from 'src/app/shared/models/hero-assets.model';
 import { Mana } from '../build-deck.component';
 import { Card } from 'src/app/shared/models/card.model';
-import * as fromApp from '../../../../store/app.reducer';
-import { Store } from '@ngrx/store';
+import { MatSnackBar } from '@angular/material';
 
 @Component({
   selector: 'app-deck-assembler',
@@ -29,9 +29,14 @@ export class DeckAssemblerComponent implements OnInit {
     new Mana(7, null, 0)
   ];
   selectedCards: Card[] = [];
-  duplicateCardIndex: number;
+  format: string;
+  deck: DeckDefinition = {
+    cards: [],
+    format: 1,
+    heroes: []
+  };
 
-  constructor(private deckService: DeckBuilderService, private changeDetector: ChangeDetectorRef) { }
+  constructor(private deckService: DeckBuilderService, private changeDetector: ChangeDetectorRef, private deckCodeSnackbar: MatSnackBar) { }
 
   ngOnInit() {
     this.hero = this.deckService.getHero();
@@ -39,6 +44,11 @@ export class DeckAssemblerComponent implements OnInit {
     this.deckService.selectedCard.subscribe(card => {
       if (this.deckService.builderUtils.getSelectedCardIndex(card, this.selectedCards) === -1) {
         this.selectedCards.push(card);
+        this.selectedCards.sort((first, second) => {
+          if (first.name < second.name) {
+            return -1;
+          }
+        });
       }
       this.addCostToManaCurve(card.manaCost);
       this.calculateCardCount();
@@ -89,6 +99,26 @@ export class DeckAssemblerComponent implements OnInit {
     this.calculateCardCount();
   }
 
+  onCopyDeckCode(event: ClipboardEvent) {
+    this.selectedCards.forEach((card) => {
+      this.deck.cards.push([card.id, card.count]);
+    });
+
+    if (localStorage.getItem('selectedFormat') === 'standard') {
+      this.deck.format = 2;
+    } else {
+      this.deck.format = 1;
+    }
+    const clipboard = event.clipboardData || window['clipboardData'];
+    this.deck.heroes.push(this.deckService.getHero().deckStringHeroId);
+    const deckString = encode(this.deck);
+    console.log(deckString);
+    clipboard.setData('text', deckString);
+    this.deckCodeSnackbar.open('Deck code copied to clipboard', 'Dismiss', {
+      duration: 3000
+    });
+  }
+
   private addCostToManaCurve(cost: number) {
     if (cost >= 7) {
       ++this.manaCurve[7].cardCount;
@@ -104,14 +134,16 @@ export class DeckAssemblerComponent implements OnInit {
   }
 
   private calculateCardCount() {
+    this.deckService.isMaxCardCountReached = false;
+    this.currentCardCount = 0;
+    this.selectedCards.forEach(card => {
+      this.currentCardCount += card.count;
+    });
+
     if (this.currentCardCount === this.maxCardCount) {
       this.deckService.isMaxCardCountReached = true;
     } else {
       this.deckService.isMaxCardCountReached = false;
-      this.currentCardCount = 0;
-      this.selectedCards.forEach(card => {
-        this.currentCardCount += card.count;
-      });
     }
   }
 }

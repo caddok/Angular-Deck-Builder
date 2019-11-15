@@ -4,5 +4,6 @@ export class HeroAssets {
               public heroBanner: string,
               public deckBanner: string,
               public hero: string,
-              public classIcon: string) { }
+              public classIcon: string,
+              public deckStringHeroId: number) { }
 }

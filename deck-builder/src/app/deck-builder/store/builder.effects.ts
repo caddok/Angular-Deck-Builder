@@ -1,13 +1,13 @@
-import { switchMap, map, catchError, withLatestFrom } from 'rxjs/operators';
+import { switchMap, map } from 'rxjs/operators';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { DeckBuilderService, CardSearchResponse } from '../select-hero/build-deck/deck-builder.service';
 import { Card } from 'src/app/shared/models/card.model';
-import { HttpErrorResponse } from '@angular/common/http';
-import { of } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as BuilderActions from './builder.actions';
 import * as fromBuilder from './builder.reducer';
+import { MinionType } from 'src/app/shared/interfaces/api-responses/minion-types';
+import { CardApiResponse } from 'src/app/shared/interfaces/api-responses/card-api-response';
 
 @Injectable()
 export class BuilderEffects {
@@ -27,8 +27,7 @@ export class BuilderEffects {
     switchMap(() => {
       return this.deckService.getClassCards()
         .pipe(
-          map((response: CardSearchResponse) => this.onClassCardsSearchResult(response)),
-          catchError((response) => of(BuilderActions.searchClassCardsFail({ errorMessage: response.message })))
+          map((response: CardSearchResponse) => this.onClassCardsSearchResult(response))
         );
     })
   );
@@ -39,8 +38,7 @@ export class BuilderEffects {
   deckBuilderNeutralStart$ = this.$actions.pipe(
     ofType(BuilderActions.deckBuilderStartNeutralCards),
     switchMap(() => this.deckService.getNeutralCards().pipe(
-      map((response: CardSearchResponse) => this.onNeutralCardsSearchResult(response)),
-      catchError((error: HttpErrorResponse) => of(BuilderActions.searchNeutralCardsFail({ errorMessage: error.message })))
+      map((response: CardSearchResponse) => this.onNeutralCardsSearchResult(response))
     ))
   );
 
@@ -89,9 +87,44 @@ export class BuilderEffects {
         cardResponse.image.en_US,
         cardResponse.cropImage,
         cardResponse.rarityId === 5 ? true : false,
-        0, cardResponse.rarityId === 5 ? 1 : 2,
-        false);
+        this.checkText(cardResponse.text.en_US),
+        this.getMinionType(cardResponse),
+        cardResponse.id,
+        cardResponse.rarityId === 5 ? 1 : 2);
     });
+  }
+
+  private getMinionType(card: CardApiResponse): MinionType {
+    switch (card.minionTypeId) {
+      case 14:
+        return MinionType.murloc;
+      case 15:
+        return MinionType.demon;
+      case 17:
+        return MinionType.mech;
+      case 18:
+        return MinionType.elemental;
+      case 20:
+        return MinionType.beast;
+      case 21:
+        return MinionType.totem;
+      case 23:
+        return MinionType.pirate;
+      case 24:
+        return MinionType.dragon;
+      case 26:
+        return MinionType.all;
+      default:
+        return MinionType.none;
+    }
+  }
+
+  private checkText(text: string) {
+    if (typeof text === 'undefined') {
+      return '';
+    } else {
+      return text;
+    }
   }
 
   private checkPagesCounter(): boolean {

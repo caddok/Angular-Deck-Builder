@@ -109,7 +109,7 @@ h4 {
 .cards-container {
   width: inherit;
   height: calc(100% - 12.75%);
-  overflow-y: hidden;
+  overflow: hidden auto;
   background-color: #392c4a;
 }
 
@@ -124,10 +124,11 @@ h4 {
 .mana-cost {
   width: 25px;
   height: 100%;
-  background: url("../../../../../assets//images/test_crystal.png") no-repeat center center;
+  background: url("../../../../../assets//images/test_crystal.png") no-repeat
+    center center;
   background-size: cover;
   color: white;
-  background-color: #2A2828;
+  background-color: #2a2828;
 }
 
 .card-crop {
@@ -138,16 +139,16 @@ h4 {
 }
 
 .cards-container-card-count {
-  width: 20px;
   height: 100%;
-  background-color: #2A2828;
+  background-color: #2a2828;
 }
 
 .card-crop-item:hover {
-  border: 3px solid #D5B24F;
+  border: 3px solid #d5b24f;
 }
 
-h3, span {
+h3,
+span {
   text-align: center;
   color: white;
   text-shadow: rgb(0, 0, 0) 2px 0px 0px, rgb(0, 0, 0) 1.75517px 0.95885px 0px,
@@ -159,4 +160,19 @@ h3, span {
     rgb(0, 0, 0) -0.42159px -1.95506px 0px,
     rgb(0, 0, 0) 0.56732px -1.91785px 0px, rgb(0, 0, 0) 1.41734px -1.41108px 0px,
     rgb(0, 0, 0) 1.92034px -0.55883px 0px;
+}
+
+.deck-code-container {
+  width: 100%;
+  height: 50px;
+  cursor: pointer;
+}
+
+button {
+  width: 100%;
+  height: 100%;
+  color: white;
+  background-image: linear-gradient(90deg, #921b9a, #b921c4, #921b9a);
+  border: none;
+  text-shadow: 0 0 4px rgba(0, 0, 0, 0.3), 0 0 8px rgba(0, 0, 0, 0.3);
 }

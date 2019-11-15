@@ -4,6 +4,7 @@ export interface CardApiResponse {
   cardTypeId: number;
   classId: number;
   collectible: number;
+  minionTypeId: number;
   cropImage: string;
   flavorText: {
     de_DE: string;

@@ -25,14 +25,18 @@ export class BuildDeckComponent implements OnInit, OnDestroy {
   areClassCardsShown = true;
   areNeutralCardsShown = true;
   isDeckAssemblerShown = true;
+  hasFoundNoCards = false;
   manaCosts = [new Mana(0, false), new Mana(1, false), new Mana(2, false), new Mana(3, false), new Mana(4, false),
   new Mana(5, false), new Mana(6, false), new Mana(7, false), new Mana(8, false), new Mana(9, false), new Mana(10, false)];
   classCards: Card[] = [];
   neutralCards: Card[] = [];
   isLoading: boolean;
   searchFilter: string;
+  areSearchFiltersApplied = false;
   private deckBuilderSub: Subscription;
   private assembledDeck: Card[] = [];
+  filteredClassCards: Card[] = [];
+  filteredNeutralCards: Card[] = [];
 
   constructor(private deckService: DeckBuilderService, private store: Store<fromApp.AppState>, private fullDeckSnackbar: MatSnackBar) { }
 
@@ -70,27 +74,115 @@ export class BuildDeckComponent implements OnInit, OnDestroy {
 
   onManaCostSelected(mana: Mana) {
     mana.selected = !mana.selected;
-    if (mana.selected) {
-      this.deckService.removeManaFilter(mana.cost);
-    } else {
+    if (mana.selected && (typeof this.searchFilter === 'undefined' || this.searchFilter === '')) {
       this.deckService.addManaFilter(mana.cost);
+      this.filteredClassCards.push(...this.deckService.builderUtils.filterCardsByManaCost(this.classCards, mana.cost));
+      this.filteredClassCards = this.deckService.builderUtils.orderByManaCost(this.filteredClassCards);
+      this.filteredNeutralCards.push(...this.deckService.builderUtils.filterCardsByManaCost(this.neutralCards, mana.cost));
+      this.filteredNeutralCards = this.deckService.builderUtils.orderByManaCost(this.filteredNeutralCards);
+      this.checkFilteredResults();
+    } else if (mana.selected && this.searchFilter) {
+      this.filteredClassCards = this.deckService.builderUtils.orderByManaCost
+        (
+          [
+            ...this.filteredClassCards,
+            ...this.deckService.builderUtils.filterCardsByText(
+              this.deckService.builderUtils.filterCardsByManaCost(this.classCards, mana.cost), this.searchFilter)
+          ]
+        );
+
+      this.filteredNeutralCards = this.deckService.builderUtils.orderByManaCost
+        (
+          [
+            ...this.filteredNeutralCards,
+            ...this.deckService.builderUtils.filterCardsByText(
+              this.deckService.builderUtils.filterCardsByManaCost(this.neutralCards, mana.cost), this.searchFilter)
+          ]
+        );
+      this.checkFilteredResults();
+    } else {
+      this.deckService.removeManaFilter(mana.cost);
+      if (this.deckService.selectedManaFilters.length > 0) {
+        const removedFilterClassCards: { startIndex: number, count: number } =
+          this.deckService.builderUtils.removeCardByManaFilter(this.filteredClassCards, mana.cost);
+        const removedFilterNeutralCards: { startIndex: number, count: number } =
+          this.deckService.builderUtils.removeCardByManaFilter(this.filteredNeutralCards, mana.cost);
+        this.filteredClassCards.splice(removedFilterClassCards.startIndex, removedFilterClassCards.count);
+        this.filteredNeutralCards.splice(removedFilterNeutralCards.startIndex, removedFilterNeutralCards.count);
+      } else if (this.deckService.selectedManaFilters.length === 0 && this.searchFilter) {
+        this.filteredClassCards = this.deckService.builderUtils.orderByManaCost(
+          this.deckService.builderUtils.filterCardsByText(this.classCards, this.searchFilter)
+        );
+        this.filteredNeutralCards = this.deckService.builderUtils.orderByManaCost(
+          this.deckService.builderUtils.filterCardsByText(this.neutralCards, this.searchFilter)
+        );
+      } else {
+        this.filteredClassCards = [];
+        this.filteredNeutralCards = [];
+        this.areSearchFiltersApplied = false;
+        this.hasFoundNoCards = false;
+      }
     }
   }
 
   onSearchPhrase(event: any) {
-    console.log(event.target.value);
+    this.areSearchFiltersApplied = true;
+    this.searchFilter = event.target.value;
+    if (this.deckService.selectedManaFilters.length > 0) {
+      this.filteredClassCards = this.deckService.builderUtils.orderByManaCost(
+        this.deckService.builderUtils.filterCardsByText(this.filteredClassCards, this.searchFilter)
+      );
+
+      this.filteredNeutralCards = this.deckService.builderUtils.orderByManaCost(
+        this.deckService.builderUtils.filterCardsByText(this.filteredNeutralCards, this.searchFilter)
+      );
+      this.checkFilteredResults();
+    } else {
+      this.filteredClassCards = [...this.deckService.builderUtils.orderByManaCost(
+        this.deckService.builderUtils.filterCardsByText(this.classCards, this.searchFilter)
+      )];
+
+      this.filteredNeutralCards = [...this.deckService.builderUtils.orderByManaCost(
+        this.deckService.builderUtils.filterCardsByText(this.neutralCards, this.searchFilter)
+      )];
+      this.checkFilteredResults();
+    }
   }
 
   onClearSearchFilter() {
+    this.filteredClassCards = this.deckService.builderUtils.orderByManaCost(
+      this.deckService.builderUtils.removeCardsBySearchPhrase(this.filteredClassCards, this.searchFilter)
+    );
+    this.filteredNeutralCards = this.deckService.builderUtils.orderByManaCost(
+      this.deckService.builderUtils.removeCardsBySearchPhrase(this.filteredNeutralCards, this.searchFilter)
+    );
     this.searchFilter = '';
+    if (this.filteredClassCards.length === 0 &&
+      this.filteredNeutralCards.length === 0 &&
+      this.deckService.selectedManaFilters.length === 0) {
+      this.areSearchFiltersApplied = false;
+      this.hasFoundNoCards = false;
+    } else if (this.filteredClassCards.length === 0 &&
+      this.filteredNeutralCards.length === 0 &&
+      this.deckService.selectedManaFilters.length > 0) {
+      this.deckService.selectedManaFilters.forEach(manaFilter => {
+        this.filteredClassCards = [...this.filteredClassCards,
+        ...this.deckService.builderUtils.orderByManaCost(this.deckService.builderUtils.
+          filterCardsByManaCost(this.classCards, manaFilter)
+        )];
+        this.filteredNeutralCards = [...this.filteredNeutralCards,
+        ...this.deckService.builderUtils.orderByManaCost(this.deckService.builderUtils.
+          filterCardsByManaCost(this.neutralCards, manaFilter)
+        )];
+      });
+    }
   }
 
   onAddToDeckAssembler(card: Card) {
-    const cardIndex = this.deckService.builderUtils.getSelectedCardIndex(card, this.assembledDeck);
-
     if (this.deckService.isMaxCardCountReached) {
       this.openSnackbar();
     } else {
+      const cardIndex = this.deckService.builderUtils.getSelectedCardIndex(card, this.assembledDeck);
       if (cardIndex > -1 && card.maxCount > card.count) {
         ++card.count;
         this.deckService.addCard(card);
@@ -106,10 +198,41 @@ export class BuildDeckComponent implements OnInit, OnDestroy {
     }
   }
 
+  getClassCards(): Card[] {
+    if (this.areSearchFiltersApplied) {
+      return this.filteredClassCards;
+    } else {
+      return this.classCards;
+    }
+  }
+
+  getNeutralCards(): Card[] {
+    if (this.areSearchFiltersApplied) {
+      return this.filteredNeutralCards;
+    } else {
+      return this.neutralCards;
+    }
+  }
+
   private openSnackbar() {
     this.fullDeckSnackbar.open('Your deck is full', 'Dismiss', {
       duration: 3000
     });
+  }
+
+  private checkFilteredResults() {
+    const classCardsCount = this.filteredClassCards.length;
+    const neutralCardsCount = this.filteredNeutralCards.length;
+
+    if (classCardsCount === 0 && neutralCardsCount === 0) {
+      this.hasFoundNoCards = true;
+    } else if (classCardsCount === 0 && neutralCardsCount > 0) {
+      this.areClassCardsShown = false;
+    } else if (classCardsCount > 0 && neutralCardsCount > 0) {
+      this.areSearchFiltersApplied = true;
+    } else {
+      this.areNeutralCardsShown = false;
+    }
   }
 
   ngOnDestroy(): void {
