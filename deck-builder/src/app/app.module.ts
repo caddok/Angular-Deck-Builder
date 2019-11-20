@@ -25,6 +25,7 @@ import { AuthEffects } from './auth/store/auth.effects';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { BuilderEffects } from './deck-builder/store/builder.effects';
 import { ApiInterceptor } from './shared/api-interceptor.service';
+import { ClipboardModule } from 'ngx-clipboard';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { ApiInterceptor } from './shared/api-interceptor.service';
     EffectsModule.forRoot([AuthEffects, BuilderEffects]),
     FormsModule,
     HttpClientModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    ClipboardModule
   ],
   providers:
     [

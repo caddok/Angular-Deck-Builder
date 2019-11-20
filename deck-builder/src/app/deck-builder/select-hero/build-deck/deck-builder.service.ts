@@ -66,6 +66,7 @@ export class DeckBuilderService {
   selectedCard: Subject<Card> = new Subject();
   isMaxCardCountReached = false;
   format: string;
+  selectedCards: Card[] = [];
 
   constructor(private http: HttpClient) { }
 
@@ -145,9 +146,14 @@ export class DeckBuilderService {
 
   addCard(card: Card) {
     ++card.count;
+    this.selectedCards.push(card);
     if (card.count > 0 && !this.isMaxCardCountReached) {
       card.isAdded = true;
       this.selectedCard.next(card);
     }
+  }
+
+  getAlreadySelectedCards(): Card[] {
+    return this.selectedCards;
   }
 }

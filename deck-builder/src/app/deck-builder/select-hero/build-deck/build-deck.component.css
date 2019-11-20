@@ -136,7 +136,6 @@ h4 {
   height: auto;
   margin-top: 10px;
   margin-bottom: 50px;
-  float: left;
 }
 
 .card {
@@ -159,7 +158,6 @@ a {
 .deck-assembler {
   width: 300px;
   height: 650px;
-  position: sticky;
 }
 
 .neutrals-banner {
@@ -219,10 +217,11 @@ a {
 
 .deck-assembler-container {
   width: auto;
-  height: auto;
-  margin-top: 40px;
-  padding-left: 50px;
-  position: relative;
+  height: 100%;
+  padding-top: 80px;
+  position: sticky;
+  margin-left: 15px;
+  top: 5%;
   z-index: 5;
 }
 

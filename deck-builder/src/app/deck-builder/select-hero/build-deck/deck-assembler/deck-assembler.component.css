@@ -79,16 +79,17 @@ h4 {
 }
 
 .mana-columns-container {
-  width: 235px;
-  height: 130px;
-  margin-left: 20px;
-  margin-bottom: 20px;
+  position: absolute;
+  width: 225px;
+  height: 110px;
+  bottom: 25%;
+  left: 12%;
 }
 
 .mana-column {
-  width: 5%;
-  margin-bottom: 30px;
-  margin-left: 16.5px;
+  position: absolute;
+  width: 7%;
+  margin-left: 7px;
   background: rgb(252, 209, 68);
   transition: all 0.15s ease-out 0s;
   border: 1px solid rgb(249, 235, 99);
@@ -96,7 +97,8 @@ h4 {
 }
 
 .first {
-  margin-left: 23px;
+  left: 0%;
+  bottom: 0%;
 }
 
 .card-count {
@@ -175,4 +177,9 @@ button {
   background-image: linear-gradient(90deg, #921b9a, #b921c4, #921b9a);
   border: none;
   text-shadow: 0 0 4px rgba(0, 0, 0, 0.3), 0 0 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+}
+
+.copyNotAllowed {
+  cursor: not-allowed;
 }

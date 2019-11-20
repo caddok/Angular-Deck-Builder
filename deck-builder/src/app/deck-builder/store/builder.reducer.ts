@@ -7,6 +7,7 @@ export interface State {
   error: string;
   classCards: Card[];
   neutralCards: Card[];
+  selectedCards: Card[];
   selectedCard: Card;
 }
 
@@ -15,7 +16,8 @@ const initialState: State = {
   error: null,
   classCards: [],
   neutralCards: [],
-  selectedCard: null
+  selectedCard: null,
+  selectedCards: []
 };
 
 export const reducer = createReducer(
@@ -38,5 +40,11 @@ export const reducer = createReducer(
     classCards: action.classCards,
     neutralCards: action.neutralCards,
     isLoading: false
+  })),
+  on(BuilderActions.deckBuilderRefresh, (state, action) => ({
+    ...state,
+    classCards: action.classCards,
+    neutralCards: action.neutralCards,
+    selectedCards: action.selectedCards
   }))
 );

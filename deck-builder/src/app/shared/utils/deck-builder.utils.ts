@@ -44,4 +44,21 @@ export class DeckBuilderUtils {
   orderByManaCost(cards: Card[]): Card[] {
     return cards.sort((first, second) => first.manaCost - second.manaCost);
   }
+
+  orderCardsAddedInDeckAssembler(cards: Card[]) {
+    return cards.sort((first, second) => {
+      if (first.manaCost < second.manaCost) {
+        return -1;
+      } else if (first.manaCost === second.manaCost) {
+        if (first.name < second.name) {
+          return -1;
+        }
+        if (second.name > first.name) {
+          return -1;
+        }
+      } else {
+        return 1;
+      }
+    });
+  }
 }

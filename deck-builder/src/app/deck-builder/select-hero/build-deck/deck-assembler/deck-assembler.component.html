@@ -45,5 +45,7 @@
   </div>
 </div>
 <div class="deck-code-container" fxLayout="row">
-  <button role="button" (click)="onCopyDeckCode($event)" [disabled]="(currentCardCount < maxCardCount)">{{ 'Copy deck code' | uppercase }}</button>
+  <button role="button" (click)="onCopyDeckCode($event)" [disabled]="(currentCardCount < maxCardCount)"
+    [ngClass]="{'copyNotAllowed': currentCardCount < maxCardCount}">{{ 'Copy deck code' | uppercase }}
+  </button>
 </div>

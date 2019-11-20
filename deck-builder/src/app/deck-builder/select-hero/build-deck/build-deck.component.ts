@@ -1,12 +1,14 @@
+import { CardApiResponse } from './../../../shared/interfaces/api-responses/card-api-response';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DeckBuilderService } from './deck-builder.service';
 import { HeroAssets } from 'src/app/shared/models/hero-assets.model';
 import { Subscription } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { Card } from 'src/app/shared/models/card.model';
+import { MatSnackBar } from '@angular/material';
 import * as fromApp from 'src/app/store/app.reducer';
 import * as BuilderActions from '../../store/builder.actions';
-import { MatSnackBar } from '@angular/material';
+import { Router, NavigationStart } from '@angular/router';
 
 export class Mana {
   constructor(public cost: number, public selected?: boolean, public cardCount?: number) { }
@@ -37,23 +39,39 @@ export class BuildDeckComponent implements OnInit, OnDestroy {
   private assembledDeck: Card[] = [];
   filteredClassCards: Card[] = [];
   filteredNeutralCards: Card[] = [];
+  private cardSub: Subscription;
+  private isBrowserRefreshed = false;
+  private browserRefreshSub: Subscription;
 
-  constructor(private deckService: DeckBuilderService, private store: Store<fromApp.AppState>, private fullDeckSnackbar: MatSnackBar) { }
+  constructor(
+    private deckService: DeckBuilderService,
+    private store: Store<fromApp.AppState>,
+    private fullDeckSnackbar: MatSnackBar,
+    private router: Router) { }
 
   ngOnInit() {
     this.assets = this.deckService.getHero();
     this.format = localStorage.getItem('selectedFormat');
-    this.store.dispatch(BuilderActions.deckBuilderStartClassCards());
-    this.store.dispatch(BuilderActions.deckBuilderStartNeutralCards());
+    this.dispatchDeckBuilderStart();
+    this.browserRefreshSub = this.router.events.subscribe((event) => {
+      if (event instanceof NavigationStart) {
+        this.isBrowserRefreshed = !this.router.navigated;
+      }
+    });
 
     this.deckBuilderSub = this.store.select('builder')
-      .subscribe(result => {
-        this.classCards = [...result.classCards];
-        this.neutralCards = [...result.neutralCards];
-        this.isLoading = result.isLoading;
+      .subscribe(state => {
+        if (state.selectedCards.length > 0) {
+          this.classCards = state.classCards;
+          this.neutralCards = state.neutralCards;
+        } else {
+          this.classCards = [...state.classCards];
+          this.neutralCards = [...state.neutralCards];
+          this.isLoading = state.isLoading;
+        }
       });
 
-    this.deckService.selectedCard.subscribe(
+    this.cardSub = this.deckService.selectedCard.subscribe(
       card => {
         if (card.count === 0) {
           this.assembledDeck.splice(this.deckService.builderUtils.getSelectedCardIndex(card, this.assembledDeck), 1);
@@ -121,6 +139,8 @@ export class BuildDeckComponent implements OnInit, OnDestroy {
         this.filteredNeutralCards = [];
         this.areSearchFiltersApplied = false;
         this.hasFoundNoCards = false;
+        this.areClassCardsShown = true;
+        this.areNeutralCardsShown = true;
       }
     }
   }
@@ -228,18 +248,37 @@ export class BuildDeckComponent implements OnInit, OnDestroy {
       this.hasFoundNoCards = true;
     } else if (classCardsCount === 0 && neutralCardsCount > 0) {
       this.areClassCardsShown = false;
+      this.areSearchFiltersApplied = true;
     } else if (classCardsCount > 0 && neutralCardsCount > 0) {
       this.areSearchFiltersApplied = true;
     } else {
       this.areNeutralCardsShown = false;
+      this.areSearchFiltersApplied = true;
     }
   }
 
+  private dispatchDeckBuilderStart() {
+    this.store.dispatch(BuilderActions.deckBuilderStartClassCards());
+    this.store.dispatch(BuilderActions.deckBuilderStartNeutralCards());
+  }
+
   ngOnDestroy(): void {
-    this.store.dispatch(BuilderActions.resetDeckBuilder({ classCards: this.classCards, neutralCards: this.neutralCards }));
-    this.deckService.resetPageCounters();
-    if (this.deckBuilderSub) {
+    if (this.isBrowserRefreshed) {
       this.deckBuilderSub.unsubscribe();
+      this.cardSub.unsubscribe();
+      this.deckService.resetPageCounters();
     }
+    // this.store.dispatch(BuilderActions.deckBuilderRefresh({
+    //   classCards: this.classCards,
+    //   neutralCards: this.neutralCards,
+    //   selectedCards: this.deckService.selectedCards
+    // }));
+
+    // if (this.deckBuilderSub) {
+
+    // }
+    // if (this.cardSub) {
+
+    // }
   }
 }

@@ -1,17 +1,21 @@
 import { encode, DeckDefinition } from 'deckstrings';
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, OnDestroy } from '@angular/core';
 import { DeckBuilderService } from '../deck-builder.service';
 import { HeroAssets } from 'src/app/shared/models/hero-assets.model';
 import { Mana } from '../build-deck.component';
 import { Card } from 'src/app/shared/models/card.model';
 import { MatSnackBar } from '@angular/material';
+import { ClipboardService } from 'ngx-clipboard';
+import { Subscription } from 'rxjs';
+import * as fromApp from '../../../../store/app.reducer';
+import { Store } from '@ngrx/store';
 
 @Component({
   selector: 'app-deck-assembler',
   templateUrl: './deck-assembler.component.html',
   styleUrls: ['./deck-assembler.component.css']
 })
-export class DeckAssemblerComponent implements OnInit {
+export class DeckAssemblerComponent implements OnInit, OnDestroy {
 
   hero: HeroAssets;
   maxCardCount = 30;
@@ -35,23 +39,23 @@ export class DeckAssemblerComponent implements OnInit {
     format: 1,
     heroes: []
   };
+  private deckSubscription: Subscription;
 
-  constructor(private deckService: DeckBuilderService, private changeDetector: ChangeDetectorRef, private deckCodeSnackbar: MatSnackBar) { }
+  constructor(
+    private deckService: DeckBuilderService,
+    private changeDetector: ChangeDetectorRef,
+    private deckCodeSnackbar: MatSnackBar,
+    private clipboardService: ClipboardService,
+    private store: Store<fromApp.AppState>) { }
 
   ngOnInit() {
     this.hero = this.deckService.getHero();
     this.deckTitle = localStorage.getItem('selectedFormat') + ' ' + this.hero.hero + ' ' + 'deck';
-    this.deckService.selectedCard.subscribe(card => {
-      if (this.deckService.builderUtils.getSelectedCardIndex(card, this.selectedCards) === -1) {
-        this.selectedCards.push(card);
-        this.selectedCards.sort((first, second) => {
-          if (first.name < second.name) {
-            return -1;
-          }
-        });
-      }
-      this.addCostToManaCurve(card.manaCost);
-      this.calculateCardCount();
+
+    this.deckSubscription = this.store.select('builder').subscribe((state) => {
+      this.selectedCards.push(...state.selectedCards);
+      this.deckService.builderUtils.orderCardsAddedInDeckAssembler(this.selectedCards);
+      this.subscribeForAddedCards();
     });
   }
 
@@ -99,7 +103,7 @@ export class DeckAssemblerComponent implements OnInit {
     this.calculateCardCount();
   }
 
-  onCopyDeckCode(event: ClipboardEvent) {
+  onCopyDeckCode() {
     this.selectedCards.forEach((card) => {
       this.deck.cards.push([card.id, card.count]);
     });
@@ -109,11 +113,10 @@ export class DeckAssemblerComponent implements OnInit {
     } else {
       this.deck.format = 1;
     }
-    const clipboard = event.clipboardData || window['clipboardData'];
     this.deck.heroes.push(this.deckService.getHero().deckStringHeroId);
     const deckString = encode(this.deck);
     console.log(deckString);
-    clipboard.setData('text', deckString);
+    this.clipboardService.copyFromContent(deckString);
     this.deckCodeSnackbar.open('Deck code copied to clipboard', 'Dismiss', {
       duration: 3000
     });
@@ -145,5 +148,20 @@ export class DeckAssemblerComponent implements OnInit {
     } else {
       this.deckService.isMaxCardCountReached = false;
     }
+  }
+
+  private subscribeForAddedCards() {
+    this.deckSubscription = this.deckService.selectedCard.subscribe(card => {
+      if (this.deckService.builderUtils.getSelectedCardIndex(card, this.selectedCards) === -1) {
+        this.selectedCards.push(card);
+        this.deckService.builderUtils.orderCardsAddedInDeckAssembler(this.selectedCards);
+      }
+      this.addCostToManaCurve(card.manaCost);
+      this.calculateCardCount();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.deckSubscription.unsubscribe();
   }
 }

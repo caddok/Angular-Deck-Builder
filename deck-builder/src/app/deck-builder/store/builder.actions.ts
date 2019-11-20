@@ -7,3 +7,5 @@ export const resetDeckBuilder = createAction('[Deck Builder Reset] Reset Class C
   props<{ classCards: Card[], neutralCards: Card[] }>());
 export const deckBuilderStartFinish = createAction('[Deck Builder Finish] All Cards Downloaded',
   props<{ classCards: Card[], neutralCards: Card[] }>());
+export const deckBuilderRefresh = createAction('[Deck Builder Refresh] Deck Builder Refresh',
+  props<{ classCards: Card[], neutralCards: Card[], selectedCards: Card[] }>());
