@@ -1,4 +1,3 @@
-import { CardApiResponse } from './../../../shared/interfaces/api-responses/card-api-response';
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { DeckBuilderService } from './deck-builder.service';
 import { HeroAssets } from 'src/app/shared/models/hero-assets.model';
@@ -8,7 +7,6 @@ import { Card } from 'src/app/shared/models/card.model';
 import { MatSnackBar } from '@angular/material';
 import * as fromApp from 'src/app/store/app.reducer';
 import * as BuilderActions from '../../store/builder.actions';
-import { Router, NavigationStart } from '@angular/router';
 
 export class Mana {
   constructor(public cost: number, public selected?: boolean, public cardCount?: number) { }
@@ -35,30 +33,21 @@ export class BuildDeckComponent implements OnInit, OnDestroy {
   isLoading: boolean;
   searchFilter: string;
   areSearchFiltersApplied = false;
-  private deckBuilderSub: Subscription;
-  private assembledDeck: Card[] = [];
   filteredClassCards: Card[] = [];
   filteredNeutralCards: Card[] = [];
+  private deckBuilderSub: Subscription;
+  private assembledDeck: Card[] = [];
   private cardSub: Subscription;
-  private isBrowserRefreshed = false;
-  private browserRefreshSub: Subscription;
 
   constructor(
     private deckService: DeckBuilderService,
     private store: Store<fromApp.AppState>,
-    private fullDeckSnackbar: MatSnackBar,
-    private router: Router) { }
+    private fullDeckSnackbar: MatSnackBar) { }
 
   ngOnInit() {
     this.assets = this.deckService.getHero();
     this.format = localStorage.getItem('selectedFormat');
     this.dispatchDeckBuilderStart();
-    this.browserRefreshSub = this.router.events.subscribe((event) => {
-      if (event instanceof NavigationStart) {
-        this.isBrowserRefreshed = !this.router.navigated;
-      }
-    });
-
     this.deckBuilderSub = this.store.select('builder')
       .subscribe(state => {
         if (state.selectedCards.length > 0) {
@@ -263,22 +252,19 @@ export class BuildDeckComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    if (this.isBrowserRefreshed) {
+    this.deckService.resetPageCounters();
+
+    this.store.dispatch(BuilderActions.deckBuilderRefresh({
+      classCards: this.classCards,
+      neutralCards: this.neutralCards,
+      selectedCards: this.deckService.selectedCards
+    }));
+
+    if (this.deckBuilderSub) {
       this.deckBuilderSub.unsubscribe();
-      this.cardSub.unsubscribe();
-      this.deckService.resetPageCounters();
     }
-    // this.store.dispatch(BuilderActions.deckBuilderRefresh({
-    //   classCards: this.classCards,
-    //   neutralCards: this.neutralCards,
-    //   selectedCards: this.deckService.selectedCards
-    // }));
-
-    // if (this.deckBuilderSub) {
-
-    // }
-    // if (this.cardSub) {
-
-    // }
+    if (this.cardSub) {
+      this.cardSub.unsubscribe();
+    }
   }
 }

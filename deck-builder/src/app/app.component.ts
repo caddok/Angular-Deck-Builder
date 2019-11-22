@@ -16,3 +16,4 @@ export class AppComponent implements OnInit {
     this.store.dispatch(AuthActions.autoLogin());
   }
 }
+

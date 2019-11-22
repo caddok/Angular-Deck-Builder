@@ -1,13 +1,13 @@
-import { switchMap, map } from 'rxjs/operators';
+import { switchMap, map, withLatestFrom } from 'rxjs/operators';
 import { Actions, Effect, ofType } from '@ngrx/effects';
 import { Injectable } from '@angular/core';
 import { DeckBuilderService, CardSearchResponse } from '../select-hero/build-deck/deck-builder.service';
 import { Card } from 'src/app/shared/models/card.model';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import * as BuilderActions from './builder.actions';
 import * as fromBuilder from './builder.reducer';
 import { MinionType } from 'src/app/shared/interfaces/api-responses/minion-types';
-import { CardApiResponse } from 'src/app/shared/interfaces/api-responses/card-api-response';
+import { CardApiResponse } from 'src/app/shared/interfaces/api-responses/CardApiResponse';
 
 @Injectable()
 export class BuilderEffects {
@@ -54,7 +54,7 @@ export class BuilderEffects {
     })
   );
 
-  constructor(private $actions: Actions, private deckService: DeckBuilderService, private store: Store<fromBuilder.State>) { }
+  constructor(private $actions: Actions, private deckService: DeckBuilderService, private store: Store<fromBuilder.BuilderState>) { }
 
   private onClassCardsSearchResult(response: CardSearchResponse) {
     this.classCardsCurrentPage++;

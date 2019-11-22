@@ -2,7 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import * as BuilderActions from './builder.actions';
 import { Card } from 'src/app/shared/models/card.model';
 
-export interface State {
+export interface BuilderState {
   isLoading: boolean;
   error: string;
   classCards: Card[];
@@ -11,7 +11,7 @@ export interface State {
   selectedCard: Card;
 }
 
-const initialState: State = {
+const initialState: BuilderState = {
   isLoading: false,
   error: null,
   classCards: [],

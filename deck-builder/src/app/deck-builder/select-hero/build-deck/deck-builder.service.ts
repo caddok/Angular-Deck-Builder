@@ -4,7 +4,7 @@ import { HeroAssets } from 'src/app/shared/models/hero-assets.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Card } from 'src/app/shared/models/card.model';
 import { AuthApiResponse } from 'src/app/shared/interfaces/api-responses/auth-api-response';
-import { CardApiResponse } from 'src/app/shared/interfaces/api-responses/card-api-response';
+import { CardApiResponse } from 'src/app/shared/interfaces/api-responses/CardApiResponse';
 import { DeckBuilderUtils } from 'src/app/shared/utils/deck-builder.utils';
 import { Subject } from 'rxjs';
 
